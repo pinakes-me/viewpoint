@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -21,14 +21,26 @@
   }
 }
 
-/* Typography Overrides */
+/* Typography Overrides — Latin: Playfair Display, Hangul: Gowun Batang (fallback order) */
 .font-serif {
-  font-family: 'Playfair Display', Georgia, serif;
-  letter-spacing: -0.015em;
+  font-family: var(--font-playfair), var(--font-gowun), Georgia, ui-serif, serif;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 640px) {
+  .font-serif {
+    letter-spacing: 0.03em;
+  }
 }
 
 h1, h2, h3 {
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 640px) {
+  h1.font-serif {
+    letter-spacing: 0.028em;
+  }
 }
 
 /* Glassmorphism & Premium Depth Effects */

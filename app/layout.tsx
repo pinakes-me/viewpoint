@@ -1,9 +1,22 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Gowun_Batang, Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const gowunBatang = Gowun_Batang({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-gowun",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -23,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className="h-full">
       <body
-        className={`${inter.className} flex min-h-screen flex-col antialiased`}
+        className={`${inter.className} ${playfairDisplay.variable} ${gowunBatang.variable} flex min-h-screen flex-col antialiased`}
       >
         <main className="flex min-h-0 flex-1 flex-col">{children}</main>
       </body>
