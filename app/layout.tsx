@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   title: "ViewPoint",
   description: "같은 주제, 다른 시선으로 책을 큐레이션합니다.",
   icons: {
-    icon: "/favicon.svg",
-    apple: "/favicon.svg",
+    icon: "/favicon.png",
+    apple: "/favicon.png",
   },
 };
 
