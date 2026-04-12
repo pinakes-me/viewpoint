@@ -373,7 +373,7 @@ export default function HomePage() {
         aria-hidden={!resultsVisible}
       >
         <div className="relative flex h-full min-h-0 flex-1 overflow-hidden">
-          <aside className="flex h-full w-[260px] shrink-0 flex-col gap-3 border-r border-sepia-300 bg-sepia-100 px-4 pt-4 pb-0">
+          <aside className="hidden md:flex h-full w-[260px] shrink-0 flex-col gap-3 border-r border-sepia-300 bg-sepia-100 px-4 pt-4 pb-0">
             <button
               type="button"
               onClick={handleResetToHero}
@@ -481,7 +481,7 @@ export default function HomePage() {
 
           </aside>
 
-          <main className="min-h-0 flex-1 overflow-y-auto p-5">
+          <main className="min-h-0 flex-1 overflow-y-auto p-3 md:p-5">
             {error && hasResult ? (
               <p
                 className="mb-4 rounded-xl border border-rust/40 bg-rust-bg px-4 py-3 text-sm text-rust"
@@ -506,7 +506,7 @@ export default function HomePage() {
               * AI는 실수할 수 있습니다. 책 정보는 직접 확인해주세요.
             </p>
 
-            <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
               <section className="min-w-0 space-y-3">
                 <div className="flex items-center gap-2 border-b border-sepia-200 pb-2">
                   <span
