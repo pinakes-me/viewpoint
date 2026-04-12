@@ -295,7 +295,7 @@ export default function HomePage() {
             <p className="text-xs text-sepia-400 tracking-widest uppercase mb-2">
               관점 설정
             </p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {PERSPECTIVES.map((p) => {
                 const active = selectedMode.id === p.id;
                 return (
