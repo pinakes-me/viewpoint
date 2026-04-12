@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { BookCard } from "@/components/BookCard";
 import { Navbar } from "@/components/Navbar";
 import { SkeletonCard } from "@/components/SkeletonCard";
@@ -365,7 +365,7 @@ export default function HomePage() {
 
       <div
         className={
-          `absolute inset-0 flex min-h-[calc(100dvh-3rem)] flex-col transition-all duration-500 ease-in-out ` +
+          `absolute inset-0 flex min-h-[100dvh] md:min-h-[calc(100dvh-3rem)] flex-col transition-all duration-500 ease-in-out ` +
           (resultsVisible
             ? "z-20 opacity-100"
             : "pointer-events-none z-0 opacity-0")
@@ -481,7 +481,10 @@ export default function HomePage() {
 
           </aside>
 
-          <main className="min-h-0 flex-1 overflow-y-auto p-3 md:p-5">
+          <main
+            className="min-h-0 flex-1 overflow-y-auto p-3 pb-32 md:p-5 md:pb-5"
+            style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+          >
             {error && hasResult ? (
               <p
                 className="mb-4 rounded-xl border border-rust/40 bg-rust-bg px-4 py-3 text-sm text-rust"
