@@ -1,26 +1,101 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  body {
+    @apply bg-sepia-50 text-sepia-900;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Beautiful subtle noise filter to give a sophisticated paper texture */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+    background-blend-mode: multiply;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  ::selection {
+    @apply bg-forest-bg text-forest;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Typography Overrides */
+.font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.015em;
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+}
+
+/* Glassmorphism & Premium Depth Effects */
+
+.rounded-xl {
+  @apply transition-all duration-300 ease-out;
+}
+
+/* Enhancing BookCard and result containers */
+article.rounded-xl,
+div.rounded-xl.border {
+  box-shadow: 0 4px 20px -4px rgba(43, 35, 23, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  @apply bg-white/60 backdrop-blur-md border-sepia-200/80;
+}
+
+article.rounded-xl:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -6px rgba(43, 35, 23, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  @apply bg-white/70 border-sepia-300;
+}
+
+.bg-sepia-100 {
+  @apply bg-sepia-100/90 backdrop-blur-lg;
+}
+
+/* Input Fields and Forms */
+input[type="text"] {
+  @apply transition-all duration-300 ease-out border-sepia-200/80 bg-white/80 backdrop-blur-md;
+  box-shadow: inset 0 2px 4px rgba(43, 35, 23, 0.015);
+}
+
+input[type="text"]:focus {
+  @apply bg-white shadow-[0_0_0_4px_rgba(92,107,82,0.12)] border-forest;
+}
+
+/* Interactions */
+button {
+  @apply transition-all duration-300 ease-out;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+button.bg-forest {
+  box-shadow: 0 4px 12px -2px rgba(92, 107, 82, 0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+button.bg-forest:hover:not(:disabled) {
+  box-shadow: 0 6px 16px -2px rgba(92, 107, 82, 0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+  transform: translateY(-1px);
+}
+
+/* Smooth Scrollbar for Premium Feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-sepia-300/50 rounded-full border-[1px] border-transparent bg-clip-padding;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-sepia-400/70;
 }
