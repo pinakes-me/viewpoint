@@ -23,8 +23,8 @@
 
 /* Typography Overrides — Latin: Playfair Display, Hangul: Gowun Batang (fallback order) */
 .font-serif {
-  font-family: var(--font-playfair), var(--font-gowun), Georgia, ui-serif, serif;
-  letter-spacing: 0.02em;
+  font-family: 'Gowun Batang', 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.015em;
 }
 
 @media (max-width: 640px) {
