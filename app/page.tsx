@@ -50,6 +50,7 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [hasResult, setHasResult] = useState(false);
   const [shelfOpen, setShelfOpen] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const { order, map } = useMemo(() => groupByTopic(shelf), [shelf]);
 
@@ -60,6 +61,8 @@ export default function HomePage() {
     } catch {
       window.prompt("복사할 내용:", text);
     }
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
   }
 
   function handleClearAll() {
@@ -653,6 +656,9 @@ export default function HomePage() {
                   >
                     전체 복사
                   </button>
+                  {copySuccess && (
+                    <p className="text-xs text-forest mt-1">✓ 복사되었습니다.</p>
+                  )}
                   <button
                     type="button"
                     onClick={handleClearAll}
