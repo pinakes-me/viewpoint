@@ -106,6 +106,8 @@ export default function HomePage() {
       const sp = suggestedPerspectives[selectedSuggestedIndex];
       labelA = sp.labelA;
       labelB = sp.labelB;
+      // 추천 관점으로 실행 → 기존 관점 탭 선택 상태 초기화
+      setSelectedMode(PERSPECTIVES[1]);
     } else {
       if (
         mode.id === "custom" &&
@@ -116,6 +118,8 @@ export default function HomePage() {
       }
       labelA = mode.id === "custom" ? customLabelA.trim() : mode.labelA;
       labelB = mode.id === "custom" ? customLabelB.trim() : mode.labelB;
+      // 기존 관점 탭으로 실행 → 추천 관점 선택 상태 초기화
+      setSelectedSuggestedIndex(null);
     }
 
     setLoading(true);
