@@ -17,6 +17,7 @@ const gowunBatang = Gowun_Batang({
   subsets: ["latin"],
   variable: "--font-gowun",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -24,13 +25,10 @@ export const metadata: Metadata = {
   description: "같은 주제, 다른 시선으로 책을 큐레이션합니다.",
   icons: {
     icon: [
-      { url: "/favicon.png" },
-      { url: "/favicon.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.png?v=1", type: "image/png" }, // PNG 파일을 명시적으로 지정
     ],
-    shortcut: "/favicon.png",
-    apple: [
-      { url: "/favicon.png", sizes: "180x180", type: "image/png" },
-    ],
+    shortcut: "/favicon.png?v=1",
+    apple: "/favicon.png?v=1",
   },
   // 모바일 사파리 미리보기를 위해 아래 속성도 추가하면 좋습니다.
   appleWebApp: {

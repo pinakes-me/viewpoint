@@ -21,15 +21,15 @@
   }
 }
 
-/* Typography Overrides — Latin: Playfair Display, Hangul: Gowun Batang (fallback order) */
+/* Typography — Latin: Playfair Display, Hangul: Gowun Batang (fallback order) */
 .font-serif {
-  font-family: 'Gowun Batang', 'Playfair Display', Georgia, serif;
-  letter-spacing: -0.015em;
+  font-family: var(--font-playfair), var(--font-gowun), Georgia, ui-serif, serif;
+  letter-spacing: -0.01em;
 }
 
 @media (max-width: 640px) {
   .font-serif {
-    letter-spacing: 0.03em;
+    letter-spacing: 0em;
   }
 }
 
@@ -39,7 +39,7 @@ h1, h2, h3 {
 
 @media (max-width: 640px) {
   h1.font-serif {
-    letter-spacing: 0.028em;
+    letter-spacing: 0.01em;
   }
 }
 
