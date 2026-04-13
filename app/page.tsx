@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { BookCard } from "@/components/BookCard";
 import { Navbar } from "@/components/Navbar";
 import { SkeletonCard } from "@/components/SkeletonCard";
@@ -51,6 +51,14 @@ export default function HomePage() {
   const [hasResult, setHasResult] = useState(false);
   const [shelfOpen, setShelfOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [suggestedPerspectives, setSuggestedPerspectives] = useState<
+    { labelA: string; labelB: string; description: string }[]
+  >([]);
+  const [isSuggesting, setIsSuggesting] = useState(false);
+  const [selectedSuggestedIndex, setSelectedSuggestedIndex] = useState<number | null>(null);
+
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const suggestRef = useRef<HTMLDivElement>(null);
 
   const { order, map } = useMemo(() => groupByTopic(shelf), [shelf]);
 
@@ -91,18 +99,24 @@ export default function HomePage() {
       return;
     }
 
-    if (
-      mode.id === "custom" &&
-      (customLabelA.trim() === "" || customLabelB.trim() === "")
-    ) {
-      setError("관점 A와 B를 모두 입력해주세요.");
-      return;
-    }
+    let labelA: string;
+    let labelB: string;
 
-    const labelA =
-      mode.id === "custom" ? customLabelA.trim() : mode.labelA;
-    const labelB =
-      mode.id === "custom" ? customLabelB.trim() : mode.labelB;
+    if (selectedSuggestedIndex !== null && overrideMode === undefined) {
+      const sp = suggestedPerspectives[selectedSuggestedIndex];
+      labelA = sp.labelA;
+      labelB = sp.labelB;
+    } else {
+      if (
+        mode.id === "custom" &&
+        (customLabelA.trim() === "" || customLabelB.trim() === "")
+      ) {
+        setError("관점 A와 B를 모두 입력해주세요.");
+        return;
+      }
+      labelA = mode.id === "custom" ? customLabelA.trim() : mode.labelA;
+      labelB = mode.id === "custom" ? customLabelB.trim() : mode.labelB;
+    }
 
     setLoading(true);
     setError(null);
@@ -154,6 +168,38 @@ export default function HomePage() {
     }
   }
 
+  async function fetchSuggestedPerspectives(t: string) {
+    setIsSuggesting(true);
+    try {
+      const res = await fetch("/api/suggest-perspectives", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: t }),
+      });
+      const data = await res.json();
+      if (Array.isArray(data.perspectives)) {
+        setSuggestedPerspectives(data.perspectives);
+        if (suggestRef.current) {
+          const y = suggestRef.current.getBoundingClientRect().top + window.scrollY - 120;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+      }
+    } catch {
+      // silently ignore
+    } finally {
+      setIsSuggesting(false);
+    }
+  }
+
+  const activeLabelA =
+    selectedSuggestedIndex !== null
+      ? suggestedPerspectives[selectedSuggestedIndex]?.labelA ?? selectedMode.labelA
+      : selectedMode.labelA;
+  const activeLabelB =
+    selectedSuggestedIndex !== null
+      ? suggestedPerspectives[selectedSuggestedIndex]?.labelB ?? selectedMode.labelB
+      : selectedMode.labelB;
+
   const heroVisible = !hasResult;
   const resultsVisible = hasResult;
   const pageMinH = hasResult
@@ -174,7 +220,7 @@ export default function HomePage() {
       <div className={`relative flex-1 bg-sepia-50 ${pageMinH}`}>
       <div
         className={
-          `absolute inset-0 flex flex-col items-center justify-center overflow-y-auto px-4 py-10 transition-all duration-500 ease-in-out ${pageMinH} ` +
+          `absolute inset-0 flex flex-col items-center overflow-y-auto px-4 pt-20 pb-16 transition-all duration-500 ease-in-out ${pageMinH} ` +
           (heroVisible
             ? "z-20 opacity-100"
             : "pointer-events-none z-0 scale-[0.98] opacity-0")
@@ -228,7 +274,19 @@ export default function HomePage() {
               <input
                 type="text"
                 value={topic}
-                onChange={(e) => setTopic(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setTopic(val);
+                  if (debounceRef.current) clearTimeout(debounceRef.current);
+                  if (val === "") {
+                    setSuggestedPerspectives([]);
+                    setSelectedSuggestedIndex(null);
+                  } else if (val.trim().length >= 2) {
+                    debounceRef.current = setTimeout(() => {
+                      void fetchSuggestedPerspectives(val.trim());
+                    }, 500);
+                  }
+                }}
                 placeholder="주제를 입력하세요"
                 className="min-h-11 flex-1 rounded-xl border border-sepia-300 bg-white px-4 text-sepia-900 shadow-sm placeholder:text-sepia-400 focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/30"
                 aria-label="주제"
@@ -271,6 +329,48 @@ export default function HomePage() {
             </p>
           ) : null}
 
+          {(isSuggesting || suggestedPerspectives.length > 0) && (
+            <div ref={suggestRef} className="mt-6 w-full max-w-lg">
+              <p className="text-xs text-sepia-400 tracking-widest uppercase mb-2">
+                추천 관점
+              </p>
+              {isSuggesting ? (
+                <div className="flex flex-col gap-2">
+                  {[0, 1].map((i) => (
+                    <div
+                      key={i}
+                      className="animate-pulse rounded-xl border border-sepia-200 bg-sepia-100 px-4 py-3"
+                    >
+                      <div className="h-4 w-2/3 rounded bg-sepia-200" />
+                      <div className="mt-2 h-3 w-full rounded bg-sepia-200" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {suggestedPerspectives.map((p, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setSelectedSuggestedIndex(i)}
+                      className={
+                        "w-full rounded-xl border px-4 py-3 text-left transition-colors " +
+                        (selectedSuggestedIndex === i
+                          ? "border-[#5a7a3a] bg-[#eef4e6]"
+                          : "border-[#ddd5c4] bg-[#f4f0e8] hover:bg-sepia-100")
+                      }
+                    >
+                      <p className="text-sm font-medium text-sepia-900">
+                        {p.labelA} ↔ {p.labelB}
+                      </p>
+                      <p className="mt-1 text-xs text-sepia-600">{p.description}</p>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="mt-8 w-full max-w-lg">
             <p className="text-xs text-sepia-400 tracking-widest uppercase mb-2">
               빠른 주제
@@ -280,7 +380,10 @@ export default function HomePage() {
                 <button
                   key={t}
                   type="button"
-                  onClick={() => setTopic(t)}
+                  onClick={() => {
+                    setTopic(t);
+                    void fetchSuggestedPerspectives(t);
+                  }}
                   className={
                     "rounded-full border-[0.5px] border-sepia-300 px-3 py-1.5 text-sm text-sepia-600 transition-colors " +
                     (topic === t
@@ -307,12 +410,13 @@ export default function HomePage() {
                     type="button"
                     onClick={() => {
                       setSelectedMode(p);
+                      setSelectedSuggestedIndex(null);
                       if (error === "관점 A와 B를 모두 입력해주세요.") {
                         setError(null);
                       }
                     }}
                     className={
-                      active
+                      active && selectedSuggestedIndex === null
                         ? "rounded-lg border border-sepia-900 bg-sepia-900 px-3 py-1.5 text-sm font-medium text-white transition-colors"
                         : "rounded-lg border border-sepia-400 bg-transparent px-3 py-1.5 text-sm font-medium text-sepia-700 transition-colors hover:bg-sepia-100/50"
                     }
@@ -500,7 +604,7 @@ export default function HomePage() {
             <div className="rounded-xl border border-sepia-300 bg-sepia-100 px-4 py-3 text-sm text-sepia-800">
               {result ? (
                 <p className="leading-relaxed">
-                  {topic} · {selectedMode.labelA} vs {selectedMode.labelB}{" "}
+                  {topic} · {activeLabelA} vs {activeLabelB}{" "}
                   — {result.summary}
                 </p>
               ) : (
@@ -520,7 +624,7 @@ export default function HomePage() {
                     aria-hidden
                   />
                   <h3 className="min-w-0 truncate font-serif text-sm font-medium text-sepia-900">
-                    {selectedMode.labelA}
+                    {activeLabelA}
                   </h3>
                   <span className="ml-auto shrink-0 rounded-full border border-sepia-300 bg-sepia-50 px-2 py-0.5 text-xs font-medium tabular-nums text-sepia-700">
                     {loading ? "…" : result?.groupA.length ?? 0}권
@@ -555,7 +659,7 @@ export default function HomePage() {
                           cover_url={item.cover_url}
                           isbn={(item as any).isbn}
                           stance="A"
-                          label={selectedMode.labelA}
+                          label={activeLabelA}
                           topic={topic}
                         />
                       ))}
@@ -569,7 +673,7 @@ export default function HomePage() {
                     aria-hidden
                   />
                   <h3 className="min-w-0 truncate font-serif text-sm font-medium text-sepia-900">
-                    {selectedMode.labelB}
+                    {activeLabelB}
                   </h3>
                   <span className="ml-auto shrink-0 rounded-full border border-sepia-300 bg-sepia-50 px-2 py-0.5 text-xs font-medium tabular-nums text-sepia-700">
                     {loading ? "…" : result?.groupB.length ?? 0}권
@@ -604,7 +708,7 @@ export default function HomePage() {
                           cover_url={item.cover_url}
                           isbn={(item as any).isbn}
                           stance="B"
-                          label={selectedMode.labelB}
+                          label={activeLabelB}
                           topic={topic}
                         />
                       ))}
