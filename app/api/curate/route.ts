@@ -109,29 +109,21 @@ function classifyFromCatalogPrompt(
     })
     .join("\n");
 
-  // Ollama 프롬프트
-  const prompt = `너는 도서 큐레이터야.
-아래 [도서 목록]에서 "${topic}" 주제에 대해
-"${labelA}"와 "${labelB}" 관점으로 분류하고
-각 책의 이유도 함께 써줘.
+  const prompt = `너는 도서 전문 사서이자 큐레이터야.
+아래 [도서 목록]에서 "${topic}" 주제를
+"${labelA}"와 "${labelB}" 관점으로 분류해줘.
 
-현재 선택된 관점: ${perspectiveId}
-관점 A(${labelA})의 정의: ${perspectiveDescriptions[perspectiveId]?.A ?? labelA}
-관점 B(${labelB})의 정의: ${perspectiveDescriptions[perspectiveId]?.B ?? labelB}
+관점 정의:
+- ${labelA}: ${perspectiveDescriptions[perspectiveId]?.A ?? labelA}
+- ${labelB}: ${perspectiveDescriptions[perspectiveId]?.B ?? labelB}
 
-⚠️ 절대 규칙:
-1. [도서 목록]에 있는 제목을 철자 하나도 바꾸지 마.
-2. 목록에 없는 책은 절대 추가하지 마.
-3. 각 관점에 맞는 책을 최대한 배정하되, 명백히 맞지 않는 책은 배정하지 마. 어느 관점에도 해당하지 않으면 빈 배열([])로 둬.
-4. reason은 한국어 1~2문장. # 태그 절대 금지.
-5. 관점 불명확한 책은 제외해.
-6. reason은 반드시 한국어만 사용. 영어·러시아어·일본어 등 다른 언어 절대 금지.
-7. groupA는 반드시 "${labelA}" 정의에 맞는 책만, groupB는 반드시 "${labelB}" 정의에 맞는 책만 배정할 것. 섞지 말 것.
-8. 장르 인식 규칙:
-   - topics에 #소설 태그가 포함돼 있으면 소설(문학)로, 없으면 비문학(논픽션)으로 간주할 것.
-   - 소설은 줄거리나 소재가 아닌 '작가의 비판의식'이나 '상상력의 방향'을 기준으로 관점을 판단할 것.
-   - reason 작성 시, 소설은 "작중 인물의 선택이나 서사를 통해 ~를 보여준다"와 같이 장르적 특성을 반영하고, 비문학은 "저자의 분석과 논리적 근거를 통해 ~를 주장한다"와 같이 구분하여 표현할 것.
-9. 관점의 부합성: 한 그룹 내에 소설과 비문학이 섞여도 무방하나, 해당 관점의 정의에 핵심적으로 부합하는 도서만 엄선할 것.
+분류 규칙:
+1. [도서 목록]에 있는 책만 사용. 제목 철자 절대 변경 금지.
+2. 목록에 없는 책 추가 금지.
+3. 각 관점 정의에 명확히 부합하는 책만 배정. 불명확하면 제외.
+4. groupA는 "${labelA}" 정의에 맞는 책만, groupB는 "${labelB}" 정의에 맞는 책만. 절대 섞지 말 것.
+6. reason은 해당 도서의 내용과 관점을 자연스럽게 1~2문장으로 서술할 것. # 태그 및 타 언어 사용 금지.
+    - 소설은 서사를 중심으로, 비소설은 저자의 분석을 중심으로 장르에 맞게 자연스럽게 서술할 것 
 
 [도서 목록]
 ${bookDescriptions}
