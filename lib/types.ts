@@ -43,4 +43,5 @@ export interface BookResult {
   topics: string;
   author_full?: string;
   translator?: string;
+  description?: string;
 }

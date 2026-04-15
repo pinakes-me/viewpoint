@@ -9,7 +9,7 @@ import { getReviewsByBookIds } from "@/lib/supabase";
 
 const topicVariants: Record<string, string[]> = {
   인공지능: ["인공지능", "AI", "로봇", "기술", "미래사회"],
-  기후변화: ["기후", "환경", "생태", "탄소", "지구"],
+  기후변화: ["기후위기", "기후변화", "환경문제", "환경과미래", "탄소", "생태계파괴", "환경정책"],
   자본주의: ["자본주의", "경제", "불평등", "금융", "신자유주의"],
   소셜미디어: ["소셜미디어", "SNS", "디지털", "플랫폼"],
   "1인가구": ["1인가구", "돌봄", "사회안전망", "주거안정"],
@@ -97,7 +97,6 @@ function classifyFromCatalogPrompt(
   reviewMap: Record<number, string[]>,
   perspectiveId: string
 ) {
-  // 책 + 태그 + 헤드라인 조합
   const bookDescriptions = books
     .map((b: any) => {
       const headlines = reviewMap[b.id] || [];
@@ -105,7 +104,10 @@ function classifyFromCatalogPrompt(
         headlines.length > 0
           ? `\n  서평: ${headlines.slice(0, 3).join(" / ")}`
           : "";
-      return `- ${b.title} | 태그: ${b.topics}${headlineText}`;
+      const descText = b.description
+        ? `\n  소개: ${b.description.slice(0, 150)}`
+        : "";
+      return `- ${b.title} | 태그: ${b.topics}${descText}${headlineText}`;
     })
     .join("\n");
 
