@@ -19,7 +19,7 @@ const topicVariants: Record<string, string[]> = {
 const perspectiveDescriptions: Record<string, { A: string; B: string }> = {
   "indiv-struct": { A: "개인 노력·선택·심리 중심", B: "사회·제도·시스템 중심" },
   "tech-social": { A: "기술·혁신으로 문제 해결", B: "사회변화·정책으로 해결" },
-  "desc-crit": { A: "사실 전달·현상 정리 중심", B: "기존 구조에 문제 제기·변화 촉구" },
+  "desc-crit": { A: "사실 전달·현상 정리 중심", B: "기존 구조에 문제 제기·비판, 변화 촉구" },
   "acad-pop": { A: "이론·연구 중심", B: "경험·실천 중심" },
   "now-future": { A: "현 상황 분석·진단", B: "미래 가능성·시나리오" },
   "custom": { A: "", B: "" },
