@@ -5,7 +5,8 @@ import {
   searchBooksByTopic,
   type BookResult,
 } from "@/lib/searchBooks";
-import { getReviewsByBookIds } from "@/lib/supabase";
+import { getReviewsByBookIds, searchBooksByIds } from "@/lib/supabase";
+import { getBookIdsForCluster } from "@/lib/bookClusters";
 
 const topicVariants: Record<string, string[]> = {
   인공지능: ["인공지능", "AI", "로봇", "기술", "미래사회"],
@@ -178,22 +179,28 @@ async function callOpenAI(prompt: string) {
 }
 
 export async function POST(req: Request) {
-  const { topic, labelA, labelB, perspectiveId } = await req.json();
+  const { topic, labelA, labelB, perspectiveId, clusterId } = await req.json();
 
-  console.log("🔍 Supabase search start:", topic);
+  console.log("🔍 Supabase search start:", topic, clusterId ? `(cluster: ${clusterId})` : "");
 
   try {
-    const keywords = topicVariants[topic] || [topic];
-    const perKeyword = await Promise.all(
-      keywords.map(async (k) => {
-        const [byTopic, byTitle] = await Promise.all([
-          searchBooksByTopic(k),
-          searchBooksByTitle(k),
-        ]);
-        return [...byTopic, ...byTitle];
-      })
-    );
-    const books = dedupeBooksById(perKeyword.flat());
+    let books: BookResult[];
+    if (clusterId) {
+      const ids = getBookIdsForCluster(clusterId);
+      books = dedupeBooksById(await searchBooksByIds(ids));
+    } else {
+      const keywords = topicVariants[topic] || [topic];
+      const perKeyword = await Promise.all(
+        keywords.map(async (k) => {
+          const [byTopic, byTitle] = await Promise.all([
+            searchBooksByTopic(k),
+            searchBooksByTitle(k),
+          ]);
+          return [...byTopic, ...byTitle];
+        })
+      );
+      books = dedupeBooksById(perKeyword.flat());
+    }
     console.log("📚 Total books after expansion:", books.length);
     console.log(
       "📖 Book titles:",
