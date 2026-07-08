@@ -50,3 +50,8 @@ export function getMembershipScore(
 ): AxisScore | null {
   return loadScores().get(bookId)?.[axisId] ?? null;
 }
+
+// "관점 스펙트럼 확인" 버튼용 - 6축 전체 값을 한 번에 반환 (새 API 호출 없이 시각화).
+export function getAllMembershipScores(bookId: number): BookScores | null {
+  return loadScores().get(bookId) ?? null;
+}

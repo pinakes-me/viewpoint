@@ -8,7 +8,7 @@ import {
 import { getReviewsByBookIds, searchBooksByIds } from "@/lib/supabase";
 import { getBookIdsForCluster } from "@/lib/bookClusters";
 import { PERSPECTIVE_AXES, type PerspectiveAxisId } from "@/lib/perspectiveAxes";
-import { getMembershipScore } from "@/lib/analyzeScores";
+import { getMembershipScore, getAllMembershipScores } from "@/lib/analyzeScores";
 
 const topicVariants: Record<string, string[]> = {
   인공지능: ["인공지능", "AI", "로봇", "기술", "미래사회"],
@@ -144,6 +144,7 @@ function toGroupItem(
     isbn: book.isbn || "",
     cover_url: book.cover_url || "",
     reason: reasons[book.title] ?? `"${fallbackLabel}" 관점에 해당하는 책입니다.`,
+    scores: getAllMembershipScores(book.id) ?? undefined,
   };
 }
 
@@ -174,6 +175,7 @@ type GroupItem = {
   year: number;
   reason: string;
   cover_url?: string;
+  scores?: Record<string, { a: number; b: number }>;
 };
 
 function enrichWithCovers(
