@@ -234,7 +234,7 @@ export default function HomePage() {
             {" 읽다"}
           </h1>
           <p className="mt-6 max-w-md text-base leading-relaxed text-sepia-600 sm:text-lg">
-            관점을 선택하면 AI가 개인·구조, 설명·비판 등 다양한 시각의
+            관점을 선택하면 AI가 개인·구조, 중립·비판 등 다양한 시각의
             <br className="hidden sm:inline" /> {/* 테블릿/PC 이상에서만 줄바꿈 */}
             도서를 큐레이션 해드립니다.
           </p>
