@@ -7,6 +7,8 @@ import {
 } from "@/lib/searchBooks";
 import { getReviewsByBookIds, searchBooksByIds } from "@/lib/supabase";
 import { getBookIdsForCluster } from "@/lib/bookClusters";
+import { PERSPECTIVE_AXES, type PerspectiveAxisId } from "@/lib/perspectiveAxes";
+import { getMembershipScore } from "@/lib/analyzeScores";
 
 const topicVariants: Record<string, string[]> = {
   인공지능: ["인공지능", "AI", "로봇", "기술", "미래사회"],
@@ -25,6 +27,125 @@ const perspectiveDescriptions: Record<string, { A: string; B: string }> = {
   "now-future": { A: "현 상황 분석·진단", B: "미래 가능성·시나리오" },
   "custom": { A: "", B: "" },
 };
+
+function extractYear(period: string): number {
+  const match = period?.match(/(\d{4})/);
+  return match ? parseInt(match[1]) : 0;
+}
+
+function isUnifiedAxisId(id: unknown): id is PerspectiveAxisId {
+  return PERSPECTIVE_AXES.some((axis) => axis.id === id);
+}
+
+const MEMBERSHIP_MARGIN = 0.2;
+
+// "판단은 단일화" 원칙: 6축 요청은 즉석 GPT 분류 대신 data/analyze_scores.csv의
+// membership degree를 조회해 마진 0.2 규칙으로 분류를 확정한다. GPT를 다시 부르지 않으므로
+// curate와 Labs는 항상 같은 행(row)을 보게 되어 불일치가 구조적으로 발생할 수 없다.
+function classifyByMembership(
+  books: BookResult[],
+  axisId: PerspectiveAxisId
+): { groupA: BookResult[]; groupB: BookResult[] } {
+  const groupA: BookResult[] = [];
+  const groupB: BookResult[] = [];
+
+  for (const book of books) {
+    const score = getMembershipScore(book.id, axisId);
+    if (!score) continue; // 아직 채점되지 않은 신규 도서 - 트레이드오프로 수용, 스킵
+    const { a, b } = score;
+    if (a === 0 && b === 0) continue; // 축 자체가 이 책에 무의미
+    const diff = a - b;
+    if (diff >= MEMBERSHIP_MARGIN) groupA.push(book);
+    else if (-diff >= MEMBERSHIP_MARGIN) groupB.push(book);
+    // 마진 미달 -> 어느 쪽에도 배정하지 않음
+  }
+
+  return { groupA: groupA.slice(0, 4), groupB: groupB.slice(0, 4) };
+}
+
+// reason 생성 전용 프롬프트 - GPT는 분류를 바꾸지 않고, 이미 확정된 membership 배정의
+// 근거를 태그·서평·책소개에서 찾아 문장으로 설명하는 역할만 한다. 근거 자료가 빠지면
+// "구조 관점으로 분류된 책입니다" 같은 부실한 reason이 나온다는 게 확인된 바 있음(CLAUDE.md 참고).
+function explainAssignmentPrompt(
+  topic: string,
+  labelA: string,
+  labelB: string,
+  axisId: PerspectiveAxisId,
+  groupA: BookResult[],
+  groupB: BookResult[],
+  reviewMap: Record<number, string[]>
+): string {
+  const axisDescription = PERSPECTIVE_AXES.find((a) => a.id === axisId)?.description;
+
+  const describe = (b: BookResult) => {
+    const headlines = reviewMap[b.id] || [];
+    const headlineText =
+      headlines.length > 0
+        ? `\n  서평: ${headlines.slice(0, 3).join(" / ")}`
+        : "";
+    const descText = b.description
+      ? `\n  소개: ${b.description.slice(0, 150)}`
+      : "";
+    return `- ${b.title} | 태그: ${b.topics}${descText}${headlineText}`;
+  };
+
+  return `너는 도서 전문 사서야. 아래 책들은 "${topic}" 주제에서 이미 "${labelA}" 또는
+"${labelB}" 관점으로 분류가 확정된 상태야. 너의 역할은 분류를 바꾸는 게 아니라, 그 책이
+왜 해당 관점에 해당하는지를 태그·서평·책소개를 근거로 1~2문장 한국어로 설명하는 것뿐이야.
+
+"${labelA}" 관점 (${axisDescription?.A ?? labelA}):
+${groupA.map(describe).join("\n") || "(없음)"}
+
+"${labelB}" 관점 (${axisDescription?.B ?? labelB}):
+${groupB.map(describe).join("\n") || "(없음)"}
+
+규칙:
+1. 반드시 위에 주어진 책 제목을 그대로 사용할 것 (철자 변경 금지).
+2. 소설은 서사를 중심으로, 비소설은 저자의 분석을 중심으로 자연스럽게 서술할 것.
+3. # 태그 및 타 언어 사용 금지.
+
+아래 JSON 형식만 반환 (마크다운 없이):
+{ "reasons": { "책 제목": "이유 문장" } }`;
+}
+
+async function generateReasons(prompt: string): Promise<Record<string, string>> {
+  try {
+    const res = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a book curator. Return ONLY raw JSON. No markdown, no backticks.",
+        },
+        { role: "user", content: prompt },
+      ],
+      temperature: 0.3,
+      response_format: { type: "json_object" },
+    });
+    const text = res.choices[0].message.content ?? "{}";
+    const parsed = JSON.parse(text);
+    return (parsed?.reasons ?? {}) as Record<string, string>;
+  } catch (error) {
+    console.error("❌ reason 생성 에러:", error);
+    return {};
+  }
+}
+
+function toGroupItem(
+  book: BookResult,
+  reasons: Record<string, string>,
+  fallbackLabel: string
+): GroupItem & { isbn: string } {
+  return {
+    title: book.title,
+    author: book.author_full || book.author,
+    year: extractYear(book.period),
+    isbn: book.isbn || "",
+    cover_url: book.cover_url || "",
+    reason: reasons[book.title] ?? `"${fallbackLabel}" 관점에 해당하는 책입니다.`,
+  };
+}
 
 function dedupeBooksById(books: BookResult[]): BookResult[] {
   const seen = new Set<number>();
@@ -207,6 +328,38 @@ export async function POST(req: Request) {
       books.map((b) => b.title)
     );
 
+    if (isUnifiedAxisId(perspectiveId)) {
+      const { groupA: rawA, groupB: rawB } = classifyByMembership(
+        books,
+        perspectiveId
+      );
+
+      const bookIds = [...rawA, ...rawB].map((b) => b.id);
+      const reviewMap =
+        bookIds.length > 0 ? await getReviewsByBookIds(bookIds) : {};
+
+      const reasons =
+        rawA.length > 0 || rawB.length > 0
+          ? await generateReasons(
+              explainAssignmentPrompt(
+                topic,
+                labelA,
+                labelB,
+                perspectiveId,
+                rawA,
+                rawB,
+                reviewMap
+              )
+            )
+          : {};
+
+      return NextResponse.json({
+        summary: `${topic} 관련 도서 ${books.length}권을 찾아 "${labelA}"와 "${labelB}" 관점으로 분류했습니다.`,
+        groupA: rawA.map((b) => toGroupItem(b, reasons, labelA)),
+        groupB: rawB.map((b) => toGroupItem(b, reasons, labelB)),
+      });
+    }
+
     let prompt: string;
     let lookup: Map<string, BookResult> | null = null;
 
@@ -230,11 +383,6 @@ export async function POST(req: Request) {
 
     const parsed = await callOpenAI(prompt);
     console.log("📦 parsed result:", JSON.stringify(parsed));
-
-    function extractYear(period: string): number {
-      const match = period?.match(/(\d{4})/);
-      return match ? parseInt(match[1]) : 0;
-    }
 
     const raw = parsed as {
       groupA?: { title?: string; reason?: string }[];
