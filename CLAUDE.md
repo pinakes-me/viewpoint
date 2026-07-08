@@ -107,6 +107,15 @@
   여전히 `lib/analyzeAxes.ts`(`ANALYZE_AXES`)를 직접 참조 중. `lib/perspectiveAxes.ts`와
   값은 동일하지만 파일은 아직 분리되어 있음 (완전 통합하려면 Labs도 마이그레이션
   필요 — 지금은 범위 밖으로 남겨둠, 필요시 별도 STEP으로).
+- membership degree 측정 품질(GPT가 명시적 신호에도 0.6 부근으로 보수적으로
+  수렴하는 경향, reason 문장이 매번 달라져 일관성이 낮은 문제)은 UI로 해결할
+  수 없는 장기 과제. 지금은 손대지 않고 별도 트랙으로 남겨둠 — 연구노트
+  3장 프롬프트 튜닝 로그, 8장 한계 참고.
+- `components/BookCard.tsx`의 `stance`가 `"A"|"B"|"neutral"`로 확장됐지만
+  (STEP E), `hooks/useShelf.ts`/`ShelfItem`은 아직 `"A"|"B"`만 지원. "내 서재에
+  저장" 시 `stance === "neutral"`이면 임시로 `"A"`로 캐스팅됨 — middleGround
+  책을 서재에 저장하면 실제로는 개인 그룹으로 표시된다는 뜻. 서재 자체에
+  중립 상태를 도입하려면 별도 STEP 필요.
 
 ## 작업 방식 선호
 
