@@ -149,8 +149,10 @@ export default function HomePage() {
 
   function handleSubmitFromForm(e: React.FormEvent) {
     e.preventDefault();
-    setActiveClusterId(null);
-    void handleSubmit(undefined, undefined, null);
+    // 칩 선택으로 activeClusterId가 이미 설정되어 있으면 그 경로를 그대로 쓰고,
+    // 자유텍스트만 입력된 상태면 activeClusterId가 null이라 자연히 topic 검색이 된다
+    // (STEP F-3: 칩/입력은 상태만 바꾸고, 실행은 이 버튼 클릭이 트리거).
+    void handleSubmit();
   }
 
   function handleModeChange(mode: PerspectiveMode) {
@@ -161,9 +163,10 @@ export default function HomePage() {
   }
 
   function handleTopicChipClick(cluster: { id: string; label: string }) {
+    // 칩 클릭은 선택 상태만 반영한다 - 실행은 "큐레이션 시작" 버튼 클릭이 트리거
+    // (STEP F-3, 이전 "칩 클릭 시 즉시 실행" 방식에서 의도적으로 전환).
     setTopic(cluster.label);
     setActiveClusterId(cluster.id);
-    void handleSubmit(undefined, cluster.label, cluster.id);
   }
 
   const activeLabelA = selectedMode.labelA;
