@@ -48,9 +48,14 @@
    `classifyByMembership`). GPT는 이미 확정된 배정의 reason 문장 생성에만
    관여(`explainAssignmentPrompt`/`generateReasons`, 근거로 태그·서평·책소개
    포함). curate와 Labs가 같은 CSV 행을 보므로 불일치가 구조적으로 발생 불가.
+   마진 비교는 IEEE754 부동소수점 오차를 흡수하는 epsilon(`MARGIN_EPSILON`)을
+   두고 있고, 각 그룹은 최대 6권까지 노출하며, 마진 미달로 어느 쪽에도
+   배정되지 못한 책은 diff 절댓값이 작은 순으로 상위 4권을 `middleGround`
+   필드로 별도 반환한다(2026-07-08 STEP B~D, 아래 이력 참고).
 3. **북카드 "관점 스펙트럼 확인" 버튼**: 새 API 호출 없이, curate 응답에
    이미 포함된 6축 membership 값(`scores` 필드)을 그대로 시각화
-   (`components/BookCard.tsx`).
+   (`components/BookCard.tsx`). `stance`는 `"A"|"B"|"neutral"`을 지원하며
+   `middleGround` 카드는 neutral(세피아 톤)로 표시된다(STEP E).
 4. **관점 축은 Labs 6축으로 완전 통일**: `lib/perspectiveAxes.ts`가 단일
    소스. curate 전용이던 `tech-social`(기술 해결론/사회 해결론),
    `desc-crit`(설명적/비판적)와 **custom(직접 입력) 전부 폐기**(2026-07-09
@@ -73,7 +78,9 @@
 - 태그 표본 감사(2026-07-07) + 원천 태그 정규화(층위 B, 2026-07-08 완료):
   Supabase books.topics 갱신 완료, GitHub 최초 커밋(`3ca07c4`).
 - v4 재채점 완료: `data/analyze_scores_v4_20260708.csv` / `data/book_clusters_v4_20260708.csv`.
-  `public/data/`에도 동기화되어 있어 Labs와 curate가 같은 파일을 참조.
+  ~~`public/data/`에도 동기화되어 있어~~ → 실제로는 `public/data/analyze_scores.csv`가
+  v3 사본인 채로 방치돼 있었음(2026-07-08 STEP A에서 발견, STEP B-2에서 수정 —
+  아래 이력 참고). `book_clusters.csv`는 처음부터 정상 동기화 상태였음.
 - **2026-07-08 저녁, 관점 축 통합 + UI 실험을 커밋 없이 진행하다 꼬여서
   `3ca07c4`로 전체 롤백함.** 그 시행착오는 `git stash`(`stash@{0}`, 메시지
   "rollback-2026-07-08: 관점축 통합 작업 + UI 변경분 백업")에 참고용으로만
@@ -91,6 +98,36 @@
     `/api/suggest-perspectives` 삭제 (`6ab4f4a`)
   - "슬픈 살인"(book_id 5) 케이스로 실제 검증: curate·Labs 동일한 membership 값,
     같은 관점("개인")으로 일치 확인.
+- **2026-07-08, 테스트 중 발견된 버그 진단 + 수정 (STEP A~F, 매 STEP/조각마다 커밋)**:
+  - STEP A 진단만(커밋 없음): (1) `public/data/analyze_scores.csv`가 v4가 아니라
+    v3 사본으로 방치된 사실 발견 — "근접한 세계"(book_id 100) narrative_b 값이
+    배포본 0.7 vs v4 파일 0.5로 불일치했던 게 그 증상. (2) 심리 클러스터 마진
+    0.2 분류 재계산 중 `diff = a - b` 부동소수점 비교가 정확히 경계값(예:
+    0.6-0.4)에서 실패하는 별도 버그를 추가로 발견(구조 그룹이 부당하게 0권으로
+    나옴).
+  - STEP B-1 `classifyByMembership`에 `MARGIN_EPSILON` 도입해 부동소수점 경계값
+    버그 수정 (`7e38017`)
+  - STEP B-2 `public/data/analyze_scores.csv`를 v4로 재동기화 +
+    `scripts/analyze-batch.mjs`가 `data/`·`public/data` 양쪽에 동시 저장하도록
+    수정, `npm run sync-public-data` 안전망 추가 (`ad22b63`)
+  - STEP B-3 조사만(커밋 없음): 마진 미달 비율(클러스터당 평균 27.8%)과
+    결과 카드 레이아웃이 캡 확장을 견딜 수 있는 구조인지 확인
+  - STEP C 그룹당 캡 4→6, 마진 미달 도서를 diff 작은 순으로 최대 4권
+    `middleGround` 필드로 반환 + 접이식 UI 섹션 추가 (`28a3842`)
+  - STEP D `middleGround` 카드에 기존 `BookCard` 컴포넌트 재사용(신규 컴포넌트
+    없음) — 스펙트럼 뷰가 stance와 무관해 별도 처리 없이도 정상 동작 (`0a1051c`)
+  - STEP E `BookCard`의 `stance`를 `"A"|"B"|"neutral"`로 확장해 `middleGround`
+    알약 색상을 개인/구조와 구분되는 세피아 톤으로 분리 (`63fcbab`)
+  - STEP F-1 히어로 문구를 실제 축 라벨(중립·비판)과 일치하도록 수정 (`e8dc12a`)
+  - STEP F-2 주제 둘러보기 칩에서 META_GENRE(문학 장르) 제외 (`0d7b85b`)
+  - STEP F-3 칩/자유텍스트 입력은 선택만, 실행은 "큐레이션 시작" 버튼 클릭이
+    트리거하도록 전환 (`f7470a6`)
+  - STEP F-4 Labs 접근성 개선: `/analyze`에 "← ViewPoint로 돌아가기" 링크 추가,
+    curate 양쪽의 Labs 링크 텍스트/스타일을 "ViewPoint Labs 🧪" 버튼으로 통일
+    (`79ded38`)
+  - STEP F-5 문서화만: 알려진 이슈에 membership 품질 이슈 + neutral stance
+    캐스팅 이슈 기록 (`48d966b`)
+  - 추가로 "중립적 분석↔비판적 성찰" 축 설명 문구에서 "·변화 촉구" 제거 (`1252315`)
 
 ## 알려진 이슈
 
