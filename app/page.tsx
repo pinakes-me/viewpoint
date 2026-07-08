@@ -8,9 +8,11 @@ import { SkeletonCard } from "@/components/SkeletonCard";
 import { useShelf } from "@/hooks/useShelf";
 import type { CurationResult, PerspectiveMode, ShelfItem } from "@/lib/types";
 import { PERSPECTIVE_AXES, PERSPECTIVES } from "@/lib/perspectiveAxes";
-import { THESAURUS_CLUSTERS, META_GENRE } from "@/lib/thesaurus";
+import { THESAURUS_CLUSTERS } from "@/lib/thesaurus";
 
-const TOPIC_CHIPS = [...THESAURUS_CLUSTERS, META_GENRE];
+// META_GENRE("문학 장르")는 주제 클러스터가 아니라 장르 메타 분류라 관점 큐레이션의
+// 주제 둘러보기 칩에서는 제외한다(2026-07-09 STEP F-2 결정).
+const TOPIC_CHIPS = THESAURUS_CLUSTERS;
 const DEFAULT_PERSPECTIVE = PERSPECTIVES[0];
 
 function groupByTopic(items: ShelfItem[]) {
