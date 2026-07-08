@@ -10,6 +10,10 @@ const PROMPT_VERSION = "v3";
 const BATCH_SIZE = 10;
 const PAGE_SIZE = 1000; // Supabase 기본 1000행 제한 대응용 페이지 크기
 const OUT_PATH = path.join(ROOT, "data", "analyze_scores.csv");
+// curate/Labs가 런타임에 읽는 경로(lib/analyzeScores.ts). assign-clusters.mjs는 처음부터
+// public/data를 OUT_PATH로 쓰는데 이 스크립트만 data/에만 쓰다가 동기화가 깨진 전례가
+// 있어(2026-07-09 STEP A/B 진단), 같은 실수가 재발하지 않도록 이 스크립트도 두 곳에 동시 저장한다.
+const PUBLIC_OUT_PATH = path.join(ROOT, "public", "data", "analyze_scores.csv");
 
 const AXES = [
   { id: "indiv-struct", prefix: "indiv" },
@@ -266,11 +270,16 @@ async function main() {
     rows.push(toCsvRow(book, scores));
   }
 
+  const csvContent = [CSV_HEADER, ...rows].join("\n") + "\n";
+
   fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
-  fs.writeFileSync(OUT_PATH, [CSV_HEADER, ...rows].join("\n") + "\n", "utf8");
+  fs.writeFileSync(OUT_PATH, csvContent, "utf8");
+
+  fs.mkdirSync(path.dirname(PUBLIC_OUT_PATH), { recursive: true });
+  fs.writeFileSync(PUBLIC_OUT_PATH, csvContent, "utf8");
 
   console.log(
-    `\n✅ 총 ${rows.length}권 분석 완료 (소요 시간: ${formatElapsed(Date.now() - startedAt)}) → ${OUT_PATH}`
+    `\n✅ 총 ${rows.length}권 분석 완료 (소요 시간: ${formatElapsed(Date.now() - startedAt)}) → ${OUT_PATH}, ${PUBLIC_OUT_PATH}`
   );
   if (failedCount > 0) {
     console.log(`⚠️ 실패: ${failedCount}권 (재실행 시 자동 재시도됨)`);
