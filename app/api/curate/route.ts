@@ -38,6 +38,9 @@ function isUnifiedAxisId(id: unknown): id is PerspectiveAxisId {
 }
 
 const MEMBERSHIP_MARGIN = 0.2;
+// CSV의 a/b는 0.1 단위로 채점되지만 부동소수점 뺄셈(예: 0.6 - 0.4 = 0.19999999999999996)이
+// 정확히 마진 경계에서 IEEE754 오차로 미달 판정을 내는 걸 방지하기 위한 허용 오차.
+const MARGIN_EPSILON = 1e-9;
 
 // "판단은 단일화" 원칙: 6축 요청은 즉석 GPT 분류 대신 data/analyze_scores.csv의
 // membership degree를 조회해 마진 0.2 규칙으로 분류를 확정한다. GPT를 다시 부르지 않으므로
@@ -55,8 +58,8 @@ function classifyByMembership(
     const { a, b } = score;
     if (a === 0 && b === 0) continue; // 축 자체가 이 책에 무의미
     const diff = a - b;
-    if (diff >= MEMBERSHIP_MARGIN) groupA.push(book);
-    else if (-diff >= MEMBERSHIP_MARGIN) groupB.push(book);
+    if (diff >= MEMBERSHIP_MARGIN - MARGIN_EPSILON) groupA.push(book);
+    else if (-diff >= MEMBERSHIP_MARGIN - MARGIN_EPSILON) groupB.push(book);
     // 마진 미달 -> 어느 쪽에도 배정하지 않음
   }
 
