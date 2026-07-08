@@ -636,7 +636,7 @@ export default function HomePage() {
                         reason={item.reason}
                         cover_url={item.cover_url}
                         isbn={(item as any).isbn}
-                        stance="A"
+                        stance="neutral"
                         label="교차 관점"
                         topic={topic}
                         scores={(item as any).scores}

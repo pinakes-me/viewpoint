@@ -11,7 +11,7 @@ export type BookCardProps = {
   reason: string;
   isbn?: string;
   cover_url?: string | null;
-  stance: "A" | "B";
+  stance: "A" | "B" | "neutral";
   label: string;
   topic: string;
   variant?: "default" | "compact";
@@ -53,13 +53,20 @@ export function BookCard({
   const compact = variant === "compact";
   const [spectrumOpen, setSpectrumOpen] = useState(false);
 
-  const isA = stance === "A";
-  const pillClass = isA
-    ? "border-forest/25 bg-forest-bg text-forest"
-    : "border-rust/25 bg-rust-bg text-rust";
-  const coverClass = isA
-    ? "bg-forest-mid/35 ring-1 ring-forest-mid/25"
-    : "bg-rust-mid/35 ring-1 ring-rust-mid/25";
+  const pillClass =
+    stance === "A"
+      ? "border-forest/25 bg-forest-bg text-forest"
+      : stance === "B"
+      ? "border-rust/25 bg-rust-bg text-rust"
+      : "border-sepia-400/40 bg-sepia-200 text-sepia-600";
+  const coverClass =
+    stance === "A"
+      ? "bg-forest-mid/35 ring-1 ring-forest-mid/25"
+      : stance === "B"
+      ? "bg-rust-mid/35 ring-1 ring-rust-mid/25"
+      : "bg-sepia-300/35 ring-1 ring-sepia-400/25";
+  const fallbackCoverBg =
+    stance === "A" ? "#C0DD97" : stance === "B" ? "#F7C1C1" : "#DDD5C4";
 
   const handleSave = () => {
     if (compact) return;
@@ -71,7 +78,9 @@ export function BookCard({
       reason,
       topic,
       label,
-      stance,
+      // ShelfItem은 아직 "A"|"B"만 지원(STEP D 알려진 이슈) - neutral(중간지대)은
+      // 서재 저장 시 임시로 A로 귀속. 서재 자체에 중립 상태를 도입하려면 별도 STEP 필요.
+      stance: stance === "neutral" ? "A" : stance,
       cover_url: cover_url || "",
     });
   };
@@ -122,7 +131,7 @@ export function BookCard({
                   width: "56px",
                   height: "80px",
                   borderRadius: "4px",
-                  background: stance === "A" ? "#C0DD97" : "#F7C1C1",
+                  background: fallbackCoverBg,
                 }}
               />
             </div>
@@ -133,7 +142,7 @@ export function BookCard({
                 height: "80px",
                 borderRadius: "4px",
                 flexShrink: 0,
-                background: stance === "A" ? "#C0DD97" : "#F7C1C1",
+                background: fallbackCoverBg,
               }}
             />
           )}
