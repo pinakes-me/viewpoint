@@ -628,52 +628,19 @@ export default function HomePage() {
                 {middleGroundOpen ? (
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {result.middleGround.map((item, i) => (
-                      <div
+                      <BookCard
                         key={`mid-${item.title}-${item.author}-${i}`}
-                        className="flex gap-2 rounded-xl border border-sepia-300 bg-sepia-50 p-3"
-                      >
-                        {item.cover_url && item.cover_url.startsWith("http") ? (
-                          <img
-                            src={item.cover_url}
-                            alt={item.title}
-                            width={56}
-                            height={80}
-                            style={{
-                              borderRadius: "4px",
-                              objectFit: "cover",
-                              width: "56px",
-                              height: "80px",
-                              flexShrink: 0,
-                            }}
-                          />
-                        ) : (
-                          <div
-                            style={{
-                              width: "56px",
-                              height: "80px",
-                              borderRadius: "4px",
-                              flexShrink: 0,
-                              background: "#E8DFCB",
-                            }}
-                          />
-                        )}
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-serif text-[14px] font-semibold leading-snug text-sepia-900">
-                            {item.title}
-                          </h4>
-                          <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-                            <span className="text-[12px] text-sepia-500">
-                              {item.author}
-                            </span>
-                            <span className="inline-flex rounded border border-sepia-300 bg-sepia-100 px-1 py-px text-[12px] font-medium tabular-nums text-sepia-700">
-                              {item.year}
-                            </span>
-                          </p>
-                          <p className="mt-1 text-[12.5px] leading-snug text-sepia-700">
-                            {item.reason}
-                          </p>
-                        </div>
-                      </div>
+                        title={item.title}
+                        author={item.author}
+                        year={item.year}
+                        reason={item.reason}
+                        cover_url={item.cover_url}
+                        isbn={(item as any).isbn}
+                        stance="A"
+                        label="교차 관점"
+                        topic={topic}
+                        scores={(item as any).scores}
+                      />
                     ))}
                   </div>
                 ) : null}
