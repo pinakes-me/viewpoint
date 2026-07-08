@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ANALYZE_AXES, type AnalyzeAxisId } from "@/lib/analyzeAxes";
 import { FICTION_KEYWORDS } from "@/lib/analyzeTopics";
@@ -508,7 +509,13 @@ function AnalyzeContent() {
   return (
     <main className="min-h-screen bg-[#faf7f2] px-4 py-8 sm:px-8">
       <div className="mx-auto max-w-3xl">
-        <h1 className="text-2xl font-bold text-[#3a3226] sm:text-3xl">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1 text-sm font-medium text-[#7a6f5d] transition-colors hover:text-[#3a3226]"
+        >
+          ← ViewPoint로 돌아가기
+        </Link>
+        <h1 className="mt-3 text-2xl font-bold text-[#3a3226] sm:text-3xl">
           ViewPoint Labs 🧪
         </h1>
         <p className="mt-2 text-sm text-[#7a6f5d] sm:text-base">

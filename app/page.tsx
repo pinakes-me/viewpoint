@@ -201,9 +201,9 @@ export default function HomePage() {
       >
         <Link
           href="/analyze"
-          className="absolute right-4 top-4 text-xs font-medium uppercase tracking-widest text-sepia-400 transition-colors hover:text-forest sm:right-6 sm:top-6"
+          className="absolute right-4 top-4 rounded-full bg-forest px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-forest/90 sm:right-6 sm:top-6"
         >
-          ViewPoint Labs →
+          ViewPoint Labs 🧪
         </Link>
         <div className="mx-auto flex w-full max-w-2xl flex-col items-center text-center">
           <button

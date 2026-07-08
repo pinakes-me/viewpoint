@@ -48,9 +48,9 @@ export function Navbar({
             <div className="flex items-center gap-4">
               <Link
                 href="/analyze"
-                className="text-xs font-medium uppercase tracking-widest text-sepia-400 transition-colors hover:text-forest"
+                className="rounded-full bg-forest px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-forest/90"
               >
-                Labs
+                ViewPoint Labs 🧪
               </Link>
               <button
                 type="button"
