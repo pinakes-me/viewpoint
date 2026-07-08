@@ -26,6 +26,9 @@ export interface CurationResult {
   summary: string;
   groupA: BookItem[];
   groupB: BookItem[];
+  // 마진 미달로 groupA/groupB 어디에도 배정되지 않은 "중간지대" 책 (diff 작은 순 최대 4권).
+  // 옛 축 경로(폴백)에는 없을 수 있음.
+  middleGround?: BookItem[];
 }
 
 export interface PerspectiveMode {

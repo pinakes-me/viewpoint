@@ -55,6 +55,7 @@ export default function HomePage() {
   const [hasResult, setHasResult] = useState(false);
   const [shelfOpen, setShelfOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [middleGroundOpen, setMiddleGroundOpen] = useState(false);
 
   const { order, map } = useMemo(() => groupByTopic(shelf), [shelf]);
 
@@ -107,6 +108,7 @@ export default function HomePage() {
     setError(null);
     setShelfOpen(false);
     setResult(null);
+    setMiddleGroundOpen(false);
 
     try {
       const res = await fetch("/api/curate", {
@@ -600,6 +602,83 @@ export default function HomePage() {
                 </div>
               </section>
             </div>
+
+            {!loading && result && result.middleGround && result.middleGround.length > 0 ? (
+              <div className="mt-5">
+                <button
+                  type="button"
+                  onClick={() => setMiddleGroundOpen((v) => !v)}
+                  className="flex w-full items-center justify-between rounded-xl border border-dashed border-sepia-300 bg-sepia-50 px-4 py-2.5 text-left text-sm font-medium text-sepia-700 transition-colors hover:bg-sepia-100"
+                >
+                  <span>
+                    두 관점이 교차하는 책 {result.middleGround.length}권{" "}
+                    {middleGroundOpen ? "숨기기" : "보기"} →
+                  </span>
+                  <span
+                    className={
+                      "shrink-0 text-sepia-400 transition-transform " +
+                      (middleGroundOpen ? "rotate-180" : "")
+                    }
+                    aria-hidden
+                  >
+                    ▾
+                  </span>
+                </button>
+
+                {middleGroundOpen ? (
+                  <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {result.middleGround.map((item, i) => (
+                      <div
+                        key={`mid-${item.title}-${item.author}-${i}`}
+                        className="flex gap-2 rounded-xl border border-sepia-300 bg-sepia-50 p-3"
+                      >
+                        {item.cover_url && item.cover_url.startsWith("http") ? (
+                          <img
+                            src={item.cover_url}
+                            alt={item.title}
+                            width={56}
+                            height={80}
+                            style={{
+                              borderRadius: "4px",
+                              objectFit: "cover",
+                              width: "56px",
+                              height: "80px",
+                              flexShrink: 0,
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: "56px",
+                              height: "80px",
+                              borderRadius: "4px",
+                              flexShrink: 0,
+                              background: "#E8DFCB",
+                            }}
+                          />
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-serif text-[14px] font-semibold leading-snug text-sepia-900">
+                            {item.title}
+                          </h4>
+                          <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                            <span className="text-[12px] text-sepia-500">
+                              {item.author}
+                            </span>
+                            <span className="inline-flex rounded border border-sepia-300 bg-sepia-100 px-1 py-px text-[12px] font-medium tabular-nums text-sepia-700">
+                              {item.year}
+                            </span>
+                          </p>
+                          <p className="mt-1 text-[12.5px] leading-snug text-sepia-700">
+                            {item.reason}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
           </main>
 
           {/* STATE 3: Shelf drawer */}

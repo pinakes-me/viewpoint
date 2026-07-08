@@ -48,9 +48,10 @@ const MARGIN_EPSILON = 1e-9;
 function classifyByMembership(
   books: BookResult[],
   axisId: PerspectiveAxisId
-): { groupA: BookResult[]; groupB: BookResult[] } {
+): { groupA: BookResult[]; groupB: BookResult[]; middleGround: BookResult[] } {
   const groupA: BookResult[] = [];
   const groupB: BookResult[] = [];
+  const middle: { book: BookResult; absDiff: number }[] = [];
 
   for (const book of books) {
     const score = getMembershipScore(book.id, axisId);
@@ -60,10 +61,17 @@ function classifyByMembership(
     const diff = a - b;
     if (diff >= MEMBERSHIP_MARGIN - MARGIN_EPSILON) groupA.push(book);
     else if (-diff >= MEMBERSHIP_MARGIN - MARGIN_EPSILON) groupB.push(book);
-    // 마진 미달 -> 어느 쪽에도 배정하지 않음
+    else middle.push({ book, absDiff: Math.abs(diff) }); // 마진 미달 -> "중간지대" 후보
   }
 
-  return { groupA: groupA.slice(0, 4), groupB: groupB.slice(0, 4) };
+  // 가장 애매한(diff가 0에 가까운) 책부터 우선 노출
+  middle.sort((x, y) => x.absDiff - y.absDiff);
+
+  return {
+    groupA: groupA.slice(0, 6),
+    groupB: groupB.slice(0, 6),
+    middleGround: middle.slice(0, 4).map((m) => m.book),
+  };
 }
 
 // reason 생성 전용 프롬프트 - GPT는 분류를 바꾸지 않고, 이미 확정된 membership 배정의
@@ -147,6 +155,18 @@ function toGroupItem(
     isbn: book.isbn || "",
     cover_url: book.cover_url || "",
     reason: reasons[book.title] ?? `"${fallbackLabel}" 관점에 해당하는 책입니다.`,
+    scores: getAllMembershipScores(book.id) ?? undefined,
+  };
+}
+
+function toMiddleGroundItem(book: BookResult): GroupItem & { isbn: string } {
+  return {
+    title: book.title,
+    author: book.author_full || book.author,
+    year: extractYear(book.period),
+    isbn: book.isbn || "",
+    cover_url: book.cover_url || "",
+    reason: "두 관점 사이 어느 한쪽으로도 뚜렷하게 기울지 않는 책입니다.",
     scores: getAllMembershipScores(book.id) ?? undefined,
   };
 }
@@ -334,10 +354,8 @@ export async function POST(req: Request) {
     );
 
     if (isUnifiedAxisId(perspectiveId)) {
-      const { groupA: rawA, groupB: rawB } = classifyByMembership(
-        books,
-        perspectiveId
-      );
+      const { groupA: rawA, groupB: rawB, middleGround: rawMiddle } =
+        classifyByMembership(books, perspectiveId);
 
       const bookIds = [...rawA, ...rawB].map((b) => b.id);
       const reviewMap =
@@ -362,6 +380,7 @@ export async function POST(req: Request) {
         summary: `${topic} 관련 도서 ${books.length}권을 찾아 "${labelA}"와 "${labelB}" 관점으로 분류했습니다.`,
         groupA: rawA.map((b) => toGroupItem(b, reasons, labelA)),
         groupB: rawB.map((b) => toGroupItem(b, reasons, labelB)),
+        middleGround: rawMiddle.map(toMiddleGroundItem),
       });
     }
 
