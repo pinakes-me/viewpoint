@@ -16,7 +16,7 @@ export const PERSPECTIVE_AXES = [
     labelB: "비판적 성찰",
     description: {
       A: "사실 전달·현상 정리 중심",
-      B: "기존 구조에 문제 제기·비판·변화 촉구",
+      B: "기존 구조에 문제 제기·비판",
     },
   },
   {
