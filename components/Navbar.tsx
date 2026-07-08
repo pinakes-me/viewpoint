@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export interface NavbarProps {
   hasResult?: boolean;
   shelfOpen?: boolean;
@@ -43,16 +45,24 @@ export function Navbar({
             >
               ViewPoint
             </button>
-            <button
-              type="button"
-              onClick={onShelfClick}
-              className="inline-flex items-center gap-2 text-sm font-medium text-sepia-700 transition-colors hover:text-sepia-900"
-            >
-              <span className="hover:underline">내 서재</span>
-              <span className="rounded-full bg-sepia-200 px-2 py-0.5 text-xs font-semibold tabular-nums text-sepia-800">
-                {shelfCount}권
-              </span>
-            </button>
+            <div className="flex items-center gap-4">
+              <Link
+                href="/analyze"
+                className="text-xs font-medium uppercase tracking-widest text-sepia-400 transition-colors hover:text-forest"
+              >
+                Labs
+              </Link>
+              <button
+                type="button"
+                onClick={onShelfClick}
+                className="inline-flex items-center gap-2 text-sm font-medium text-sepia-700 transition-colors hover:text-sepia-900"
+              >
+                <span className="hover:underline">내 서재</span>
+                <span className="rounded-full bg-sepia-200 px-2 py-0.5 text-xs font-semibold tabular-nums text-sepia-800">
+                  {shelfCount}권
+                </span>
+              </button>
+            </div>
           </>
         )}
       </div>

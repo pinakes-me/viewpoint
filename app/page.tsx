@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
+import Link from "next/link";
 import { BookCard } from "@/components/BookCard";
 import { Navbar } from "@/components/Navbar";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import { useShelf } from "@/hooks/useShelf";
 import type { CurationResult, PerspectiveMode, ShelfItem } from "@/lib/types";
-import { PERSPECTIVES, PRESET_TOPICS } from "@/lib/perspectives";
+import { PERSPECTIVE_AXES, PERSPECTIVES } from "@/lib/perspectiveAxes";
+import { THESAURUS_CLUSTERS, META_GENRE } from "@/lib/thesaurus";
+
+const TOPIC_CHIPS = [...THESAURUS_CLUSTERS, META_GENRE];
+const DEFAULT_PERSPECTIVE = PERSPECTIVES[0];
 
 function groupByTopic(items: ShelfItem[]) {
   const order: string[] = [];
@@ -40,10 +45,9 @@ export default function HomePage() {
   const shelfCount = shelf.length;
 
   const [topic, setTopic] = useState("");
-  const [customLabelA, setCustomLabelA] = useState("");
-  const [customLabelB, setCustomLabelB] = useState("");
+  const [activeClusterId, setActiveClusterId] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<PerspectiveMode>(
-    PERSPECTIVES[1]
+    DEFAULT_PERSPECTIVE
   );
   const [result, setResult] = useState<CurationResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -51,14 +55,6 @@ export default function HomePage() {
   const [hasResult, setHasResult] = useState(false);
   const [shelfOpen, setShelfOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  const [suggestedPerspectives, setSuggestedPerspectives] = useState<
-    { labelA: string; labelB: string; description: string }[]
-  >([]);
-  const [isSuggesting, setIsSuggesting] = useState(false);
-  const [selectedSuggestedIndex, setSelectedSuggestedIndex] = useState<number | null>(null);
-
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const suggestRef = useRef<HTMLDivElement>(null);
 
   const { order, map } = useMemo(() => groupByTopic(shelf), [shelf]);
 
@@ -82,6 +78,7 @@ export default function HomePage() {
     setHasResult(false);
     setResult(null);
     setTopic("");
+    setActiveClusterId(null);
     setShelfOpen(false);
     setError(null);
   }
@@ -91,35 +88,19 @@ export default function HomePage() {
     else handleResetToHero();
   }
 
-  async function handleSubmit(overrideMode?: PerspectiveMode) {
+  async function handleSubmit(
+    overrideMode?: PerspectiveMode,
+    overrideTopic?: string,
+    overrideClusterId?: string | null
+  ) {
     const mode = overrideMode ?? selectedMode;
-    const q = topic.trim();
+    const q = (overrideTopic ?? topic).trim();
+    const clusterId =
+      overrideClusterId !== undefined ? overrideClusterId : activeClusterId;
+
     if (!q) {
       setError("주제를 입력하거나 선택해 주세요.");
       return;
-    }
-
-    let labelA: string;
-    let labelB: string;
-
-    if (selectedSuggestedIndex !== null && overrideMode === undefined) {
-      const sp = suggestedPerspectives[selectedSuggestedIndex];
-      labelA = sp.labelA;
-      labelB = sp.labelB;
-      // 추천 관점으로 실행 → 기존 관점 탭 선택 상태 초기화
-      setSelectedMode(PERSPECTIVES[1]);
-    } else {
-      if (
-        mode.id === "custom" &&
-        (customLabelA.trim() === "" || customLabelB.trim() === "")
-      ) {
-        setError("관점 A와 B를 모두 입력해주세요.");
-        return;
-      }
-      labelA = mode.id === "custom" ? customLabelA.trim() : mode.labelA;
-      labelB = mode.id === "custom" ? customLabelB.trim() : mode.labelB;
-      // 기존 관점 탭으로 실행 → 추천 관점 선택 상태 초기화
-      setSelectedSuggestedIndex(null);
     }
 
     setLoading(true);
@@ -133,8 +114,10 @@ export default function HomePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           topic: q,
-          labelA,
-          labelB,
+          labelA: mode.labelA,
+          labelB: mode.labelB,
+          perspectiveId: mode.id,
+          ...(clusterId ? { clusterId } : {}),
         }),
       });
 
@@ -162,7 +145,8 @@ export default function HomePage() {
 
   function handleSubmitFromForm(e: React.FormEvent) {
     e.preventDefault();
-    void handleSubmit();
+    setActiveClusterId(null);
+    void handleSubmit(undefined, undefined, null);
   }
 
   function handleModeChange(mode: PerspectiveMode) {
@@ -172,37 +156,14 @@ export default function HomePage() {
     }
   }
 
-  async function fetchSuggestedPerspectives(t: string) {
-    setIsSuggesting(true);
-    try {
-      const res = await fetch("/api/suggest-perspectives", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: t }),
-      });
-      const data = await res.json();
-      if (Array.isArray(data.perspectives)) {
-        setSuggestedPerspectives(data.perspectives);
-        if (suggestRef.current) {
-          const y = suggestRef.current.getBoundingClientRect().top + window.scrollY - 120;
-          window.scrollTo({ top: y, behavior: "smooth" });
-        }
-      }
-    } catch {
-      // silently ignore
-    } finally {
-      setIsSuggesting(false);
-    }
+  function handleTopicChipClick(cluster: { id: string; label: string }) {
+    setTopic(cluster.label);
+    setActiveClusterId(cluster.id);
+    void handleSubmit(undefined, cluster.label, cluster.id);
   }
 
-  const activeLabelA =
-    selectedSuggestedIndex !== null
-      ? suggestedPerspectives[selectedSuggestedIndex]?.labelA ?? selectedMode.labelA
-      : selectedMode.labelA;
-  const activeLabelB =
-    selectedSuggestedIndex !== null
-      ? suggestedPerspectives[selectedSuggestedIndex]?.labelB ?? selectedMode.labelB
-      : selectedMode.labelB;
+  const activeLabelA = selectedMode.labelA;
+  const activeLabelB = selectedMode.labelB;
 
   const heroVisible = !hasResult;
   const resultsVisible = hasResult;
@@ -231,6 +192,12 @@ export default function HomePage() {
         }
         aria-hidden={!heroVisible}
       >
+        <Link
+          href="/analyze"
+          className="absolute right-4 top-4 text-xs font-medium uppercase tracking-widest text-sepia-400 transition-colors hover:text-forest sm:right-6 sm:top-6"
+        >
+          ViewPoint Labs →
+        </Link>
         <div className="mx-auto flex w-full max-w-2xl flex-col items-center text-center">
           <button
             type="button"
@@ -279,17 +246,8 @@ export default function HomePage() {
                 type="text"
                 value={topic}
                 onChange={(e) => {
-                  const val = e.target.value;
-                  setTopic(val);
-                  if (debounceRef.current) clearTimeout(debounceRef.current);
-                  if (val === "") {
-                    setSuggestedPerspectives([]);
-                    setSelectedSuggestedIndex(null);
-                  } else if (val.trim().length >= 2) {
-                    debounceRef.current = setTimeout(() => {
-                      void fetchSuggestedPerspectives(val.trim());
-                    }, 500);
-                  }
+                  setTopic(e.target.value);
+                  setActiveClusterId(null);
                 }}
                 placeholder="주제를 입력하세요"
                 className="min-h-11 flex-1 rounded-xl border border-sepia-300 bg-white px-4 text-sepia-900 shadow-sm placeholder:text-sepia-400 focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/30"
@@ -322,9 +280,7 @@ export default function HomePage() {
             </div>
           ) : null}
 
-          {error &&
-          !hasResult &&
-          error !== "관점 A와 B를 모두 입력해주세요." ? (
+          {error && !hasResult ? (
             <p
               className="mt-4 max-w-lg rounded-xl border border-rust/40 bg-rust-bg px-4 py-2 text-sm text-rust"
               role="alert"
@@ -333,69 +289,24 @@ export default function HomePage() {
             </p>
           ) : null}
 
-          {(isSuggesting || suggestedPerspectives.length > 0) && (
-            <div ref={suggestRef} className="mt-6 w-full max-w-lg">
-              <p className="text-xs text-sepia-400 tracking-widest uppercase mb-2">
-                추천 관점
-              </p>
-              {isSuggesting ? (
-                <div className="flex flex-col gap-2">
-                  {[0, 1].map((i) => (
-                    <div
-                      key={i}
-                      className="animate-pulse rounded-xl border border-sepia-200 bg-sepia-100 px-4 py-3"
-                    >
-                      <div className="h-4 w-2/3 rounded bg-sepia-200" />
-                      <div className="mt-2 h-3 w-full rounded bg-sepia-200" />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  {suggestedPerspectives.map((p, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => setSelectedSuggestedIndex(i)}
-                      className={
-                        "w-full rounded-xl border px-4 py-3 text-left transition-colors " +
-                        (selectedSuggestedIndex === i
-                          ? "border-[#5a7a3a] bg-[#eef4e6]"
-                          : "border-[#ddd5c4] bg-[#f4f0e8] hover:bg-sepia-100")
-                      }
-                    >
-                      <p className="text-sm font-medium text-sepia-900">
-                        {p.labelA} ↔ {p.labelB}
-                      </p>
-                      <p className="mt-1 text-xs text-sepia-600">{p.description}</p>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="mt-8 w-full max-w-lg">
+          <div className="mt-8 w-full max-w-2xl">
             <p className="text-xs text-sepia-400 tracking-widest uppercase mb-2">
-              빠른 주제
+              주제 둘러보기
             </p>
             <div className="flex flex-wrap justify-center gap-2">
-              {PRESET_TOPICS.map((t) => (
+              {TOPIC_CHIPS.map((cluster) => (
                 <button
-                  key={t}
+                  key={cluster.id}
                   type="button"
-                  onClick={() => {
-                    setTopic(t);
-                    void fetchSuggestedPerspectives(t);
-                  }}
+                  onClick={() => handleTopicChipClick(cluster)}
                   className={
                     "rounded-full border-[0.5px] border-sepia-300 px-3 py-1.5 text-sm text-sepia-600 transition-colors " +
-                    (topic === t
+                    (activeClusterId === cluster.id
                       ? "border-forest bg-forest-bg text-forest"
                       : "bg-white hover:bg-sepia-50")
                   }
                 >
-                  {t}
+                  {cluster.label}
                 </button>
               ))}
             </div>
@@ -405,72 +316,46 @@ export default function HomePage() {
             <p className="text-xs text-sepia-400 tracking-widest uppercase mb-2">
               관점 설정
             </p>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {PERSPECTIVES.map((p) => {
-                const active = selectedMode.id === p.id;
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {PERSPECTIVE_AXES.map((axis) => {
+                const active = selectedMode.id === axis.id;
                 return (
                   <button
-                    key={p.id}
+                    key={axis.id}
                     type="button"
-                    onClick={() => {
-                      setSelectedMode(p);
-                      setSelectedSuggestedIndex(null);
-                      if (error === "관점 A와 B를 모두 입력해주세요.") {
-                        setError(null);
-                      }
-                    }}
+                    onClick={() => setSelectedMode(axis)}
                     className={
-                      active && selectedSuggestedIndex === null
-                        ? "rounded-lg border border-sepia-900 bg-sepia-900 px-3 py-1.5 text-sm font-medium text-white transition-colors"
-                        : "rounded-lg border border-sepia-400 bg-transparent px-3 py-1.5 text-sm font-medium text-sepia-700 transition-colors hover:bg-sepia-100/50"
+                      "rounded-xl border px-4 py-3 text-left transition-colors " +
+                      (active
+                        ? "border-sepia-900 bg-sepia-900"
+                        : "border-sepia-300 bg-white hover:bg-sepia-50")
                     }
                   >
-                    {p.labelA} / {p.labelB}
+                    <p
+                      className={
+                        "text-sm font-medium " +
+                        (active ? "text-white" : "text-sepia-900")
+                      }
+                    >
+                      {axis.labelA}{" "}
+                      <span className={active ? "text-white/50" : "text-sepia-400"}>
+                        ↔
+                      </span>{" "}
+                      {axis.labelB}
+                    </p>
+                    <p
+                      className={
+                        "mt-1 text-xs leading-snug " +
+                        (active ? "text-white/70" : "text-sepia-500")
+                      }
+                    >
+                      {axis.description.A} · {axis.description.B}
+                    </p>
                   </button>
                 );
               })}
             </div>
           </div>
-
-          {selectedMode.id === "custom" ? (
-            <div className="mt-4 flex w-full max-w-lg flex-col gap-2">
-              <div>
-                <div className="text-xs text-sepia-500">관점 A</div>
-                <input
-                  type="text"
-                  placeholder="관점 A  예: 기술 낙관주의, 시장 옹호론..."
-                  value={customLabelA}
-                  onChange={(e) => {
-                    setCustomLabelA(e.target.value);
-                    if (error === "관점 A와 B를 모두 입력해주세요.") {
-                      setError(null);
-                    }
-                  }}
-                  className="mt-1 min-h-11 w-full rounded-xl border border-sepia-300 bg-sepia-50 px-4 text-sepia-900 shadow-sm placeholder:text-sepia-400 focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/30"
-                />
-              </div>
-              <div>
-                <div className="text-xs text-sepia-500">관점 B</div>
-                <input
-                  type="text"
-                  placeholder="관점 B  예: 생태주의, 구조적 비판론..."
-                  value={customLabelB}
-                  onChange={(e) => {
-                    setCustomLabelB(e.target.value);
-                    if (error === "관점 A와 B를 모두 입력해주세요.") {
-                      setError(null);
-                    }
-                  }}
-                  className="mt-1 min-h-11 w-full rounded-xl border border-sepia-300 bg-sepia-50 px-4 text-sepia-900 shadow-sm placeholder:text-sepia-400 focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/30"
-                />
-              </div>
-              {error === "관점 A와 B를 모두 입력해주세요." ? (
-                <p className="text-xs text-rust" role="alert">
-                  관점 A와 B를 모두 입력해주세요.
-                </p>
-              ) : null}
-            </div>
-          ) : null}
         </div>
       </div>
 
@@ -500,7 +385,10 @@ export default function HomePage() {
               <input
                 type="text"
                 value={topic}
-                onChange={(e) => setTopic(e.target.value)}
+                onChange={(e) => {
+                  setTopic(e.target.value);
+                  setActiveClusterId(null);
+                }}
                 placeholder="주제"
                 className="w-full rounded-lg border border-sepia-300 bg-white px-3 py-2 text-sm text-sepia-900 focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/30"
               />
@@ -515,22 +403,22 @@ export default function HomePage() {
 
             <section className="shrink-0">
               <p className="text-xs text-sepia-400 tracking-widest uppercase mb-2">
-                빠른 주제
+                주제 둘러보기
               </p>
-              <div className="flex flex-col gap-2">
-                {PRESET_TOPICS.map((t) => (
+              <div className="flex flex-wrap gap-1.5">
+                {TOPIC_CHIPS.map((cluster) => (
                   <button
-                    key={t}
+                    key={cluster.id}
                     type="button"
-                    onClick={() => setTopic(t)}
+                    onClick={() => handleTopicChipClick(cluster)}
                     className={
-                      "w-full rounded-full border-[0.5px] border-sepia-300 px-3 py-1.5 text-left text-sm text-sepia-600 transition-colors " +
-                      (topic === t
+                      "rounded-full border-[0.5px] border-sepia-300 px-2.5 py-1 text-xs text-sepia-600 transition-colors " +
+                      (activeClusterId === cluster.id
                         ? "border-forest bg-forest-bg text-forest"
                         : "bg-white hover:bg-sepia-50")
                     }
                   >
-                    {t}
+                    {cluster.label}
                   </button>
                 ))}
               </div>
@@ -541,53 +429,44 @@ export default function HomePage() {
                 관점 설정
               </p>
               <nav className="flex flex-col gap-1.5" aria-label="관점 선택">
-                {PERSPECTIVES.map((p) => {
-                  const active = selectedMode.id === p.id;
+                {PERSPECTIVE_AXES.map((axis) => {
+                  const active = selectedMode.id === axis.id;
                   return (
                     <button
-                      key={p.id}
+                      key={axis.id}
                       type="button"
-                      onClick={() => handleModeChange(p)}
+                      onClick={() => handleModeChange(axis)}
                       className={
-                        active
-                          ? "w-full rounded-lg border border-sepia-900 bg-sepia-900 px-3 py-2.5 text-left text-sm font-medium text-white transition-colors"
-                          : "w-full rounded-lg border border-sepia-400 bg-transparent px-3 py-2.5 text-left text-sm font-medium text-sepia-700 transition-colors hover:bg-sepia-100/50"
+                        "w-full rounded-lg border px-3 py-2 text-left transition-colors " +
+                        (active
+                          ? "border-sepia-900 bg-sepia-900"
+                          : "border-sepia-300 bg-white hover:bg-sepia-50")
                       }
                     >
-                      <span className="block text-[11px] opacity-80">
-                        {p.labelA}
-                      </span>
-                      <span className="block text-[11px] opacity-80">
-                        {p.labelB}
-                      </span>
+                      <p
+                        className={
+                          "text-xs font-medium " +
+                          (active ? "text-white" : "text-sepia-900")
+                        }
+                      >
+                        {axis.labelA}{" "}
+                        <span className={active ? "text-white/50" : "text-sepia-400"}>
+                          ↔
+                        </span>{" "}
+                        {axis.labelB}
+                      </p>
+                      <p
+                        className={
+                          "mt-0.5 text-[11px] leading-snug " +
+                          (active ? "text-white/70" : "text-sepia-500")
+                        }
+                      >
+                        {axis.description.A} · {axis.description.B}
+                      </p>
                     </button>
                   );
                 })}
               </nav>
-              {selectedMode.id === "custom" && (
-                <div className="mt-3 mb-8 flex flex-col gap-2">
-                  <div>
-                    <div className="text-xs text-sepia-400">관점 A</div>
-                    <input
-                      type="text"
-                      placeholder="예: 기술 낙관주의..."
-                      value={customLabelA}
-                      onChange={(e) => setCustomLabelA(e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-sepia-300 bg-sepia-50 px-3 py-2 text-sm text-sepia-900 placeholder:text-sepia-400 focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/30"
-                    />
-                  </div>
-                  <div>
-                    <div className="text-xs text-sepia-400">관점 B</div>
-                    <input
-                      type="text"
-                      placeholder="예: 생태주의..."
-                      value={customLabelB}
-                      onChange={(e) => setCustomLabelB(e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-sepia-300 bg-sepia-50 px-3 py-2 text-sm text-sepia-900 placeholder:text-sepia-400 focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/30"
-                    />
-                  </div>
-                </div>
-              )}
             </section>
 
           </aside>
@@ -665,6 +544,7 @@ export default function HomePage() {
                           stance="A"
                           label={activeLabelA}
                           topic={topic}
+                          scores={(item as any).scores}
                         />
                       ))}
                 </div>
@@ -714,6 +594,7 @@ export default function HomePage() {
                           stance="B"
                           label={activeLabelB}
                           topic={topic}
+                          scores={(item as any).scores}
                         />
                       ))}
                 </div>

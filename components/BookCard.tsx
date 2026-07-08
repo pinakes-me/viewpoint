@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { useShelf } from "@/hooks/useShelf";
+import { PERSPECTIVE_AXES } from "@/lib/perspectiveAxes";
 
 export type BookCardProps = {
   title: string;
@@ -15,6 +17,9 @@ export type BookCardProps = {
   variant?: "default" | "compact";
   savedAt?: string;
   onRemove?: () => void;
+  // curate 응답에 이미 포함된 6축 membership 값 - "관점 스펙트럼 확인" 버튼이
+  // 새 API 호출 없이 이 값을 그대로 시각화한다.
+  scores?: Record<string, { a: number; b: number }>;
 };
 
 function formatSavedAt(iso: string) {
@@ -41,10 +46,12 @@ export function BookCard({
   variant = "default",
   savedAt,
   onRemove,
+  scores,
 }: BookCardProps) {
   const { addToShelf, isInShelf } = useShelf();
   const saved = isInShelf(title, author);
   const compact = variant === "compact";
+  const [spectrumOpen, setSpectrumOpen] = useState(false);
 
   const isA = stance === "A";
   const pillClass = isA
@@ -143,6 +150,41 @@ export function BookCard({
             </span>
           </p>
           <p className="mt-2 text-[12px] leading-[1.6] text-sepia-600">{reason}</p>
+
+          {!compact && scores ? (
+            <div className="mt-2">
+              <button
+                type="button"
+                onClick={() => setSpectrumOpen((v) => !v)}
+                className="text-[11px] font-medium text-sepia-500 underline-offset-2 hover:text-sepia-700 hover:underline"
+              >
+                {spectrumOpen ? "관점 스펙트럼 접기 ▲" : "관점 스펙트럼 확인 ▼"}
+              </button>
+              {spectrumOpen ? (
+                <div className="mt-2 space-y-2 rounded-lg border border-sepia-200 bg-white/70 p-2.5">
+                  {PERSPECTIVE_AXES.map((axis) => {
+                    const s = scores[axis.id];
+                    if (!s || (s.a === 0 && s.b === 0)) return null;
+                    const position = (s.b - s.a + 1) / 2;
+                    return (
+                      <div key={axis.id}>
+                        <div className="flex justify-between text-[10px] text-sepia-500">
+                          <span>{axis.labelA}</span>
+                          <span>{axis.labelB}</span>
+                        </div>
+                        <div className="relative mt-1 h-1.5 rounded-full bg-sepia-200">
+                          <span
+                            className="absolute top-1/2 h-2.5 w-2.5 -translate-y-1/2 -translate-x-1/2 rounded-full bg-forest ring-2 ring-white"
+                            style={{ left: `${position * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
 
           {compact ? (
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-sepia-200/80 pt-2">
