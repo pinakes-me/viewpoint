@@ -15,6 +15,31 @@ const OUT_PATH = path.join(ROOT, "data", "analyze_scores.csv");
 // 있어(2026-07-09 STEP A/B 진단), 같은 실수가 재발하지 않도록 이 스크립트도 두 곳에 동시 저장한다.
 const PUBLIC_OUT_PATH = path.join(ROOT, "public", "data", "analyze_scores.csv");
 
+// 실험 채점용 옵션 (M0, membership 품질 실험 전제 작업):
+//   --ids 2,54,172  지정 book_id만 해시 캐시를 무시하고 강제 재채점.
+//                   나머지 책은 해시 일치 여부와 무관하게 기존 CSV의 캐시 점수를 그대로 사용.
+//   --out <경로>    결과를 지정 파일에만 기록. 기본 산출물(data/, public/data/)은 건드리지 않음.
+// 두 옵션을 함께 쓰면 라이브 데이터 무변경으로 실험 채점이 가능하다.
+// 주의: 해시 공식(topicsHash)은 변경 금지 — 바꾸면 전체 캐시가 무효화되어 293권 재채점이 유발됨.
+function parseCliOptions() {
+  const argv = process.argv.slice(2);
+  let forceIds = null;
+  let outOverride = null;
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === "--ids" && argv[i + 1]) {
+      forceIds = new Set(
+        argv[++i]
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0)
+      );
+    } else if (argv[i] === "--out" && argv[i + 1]) {
+      outOverride = path.resolve(argv[++i]);
+    }
+  }
+  return { forceIds, outOverride };
+}
+
 const AXES = [
   { id: "indiv-struct", prefix: "indiv" },
   { id: "neutral-critical", prefix: "neutral" },
@@ -204,22 +229,53 @@ async function main() {
   const skipped = allBooks.length - books.length;
   console.log(`🏷️ 태그 없음으로 제외: ${skipped}권`);
 
+  const { forceIds, outOverride } = parseCliOptions();
+
+  if (forceIds) {
+    const known = new Set(books.map((b) => String(b.id)));
+    const unknown = [...forceIds].filter((id) => !known.has(id));
+    if (unknown.length > 0) {
+      console.error(
+        `❌ --ids에 존재하지 않는 book_id: ${unknown.join(", ")} — 중단합니다.`
+      );
+      process.exit(1);
+    }
+  }
+
   const cache = loadExistingScores();
   const scoresById = new Map();
   const toScore = [];
 
   for (const book of books) {
-    const cached = cache.get(String(book.id));
-    if (cached && cached.topicsHash === topicsHash(book)) {
-      scoresById.set(String(book.id), cached.scores);
+    const key = String(book.id);
+    const cached = cache.get(key);
+    if (forceIds) {
+      // --ids 모드: 지정된 책만 강제 재채점, 나머지는 해시와 무관하게 캐시 점수 유지
+      if (forceIds.has(key)) {
+        toScore.push(book);
+      } else if (cached) {
+        scoresById.set(key, cached.scores);
+      }
+      // 캐시에 없고 대상도 아닌 책은 결과에서 제외(기존 채점 실패 시 처리와 동일)
+    } else if (cached && cached.topicsHash === topicsHash(book)) {
+      scoresById.set(key, cached.scores);
     } else {
       toScore.push(book);
     }
   }
 
-  console.log(
-    `전체 대상: ${books.length}권 / 캐시 유지: ${books.length - toScore.length}권 / 신규 채점: ${toScore.length}권`
-  );
+  if (forceIds) {
+    console.log(
+      `🎯 --ids 모드: 강제 재채점 ${toScore.length}권 (${toScore.map((b) => b.id).join(", ")}) / 캐시 유지: ${scoresById.size}권`
+    );
+  } else {
+    console.log(
+      `전체 대상: ${books.length}권 / 캐시 유지: ${books.length - toScore.length}권 / 신규 채점: ${toScore.length}권`
+    );
+  }
+  if (outOverride) {
+    console.log(`📝 --out 모드: 결과는 ${outOverride}에만 기록 (라이브 데이터 무변경)`);
+  }
 
   const batches = [];
   for (let i = 0; i < toScore.length; i += BATCH_SIZE) {
@@ -272,14 +328,15 @@ async function main() {
 
   const csvContent = [CSV_HEADER, ...rows].join("\n") + "\n";
 
-  fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
-  fs.writeFileSync(OUT_PATH, csvContent, "utf8");
-
-  fs.mkdirSync(path.dirname(PUBLIC_OUT_PATH), { recursive: true });
-  fs.writeFileSync(PUBLIC_OUT_PATH, csvContent, "utf8");
+  // --out 지정 시 그 파일에만 기록, 기본 산출물(data/, public/data/)은 무변경
+  const outTargets = outOverride ? [outOverride] : [OUT_PATH, PUBLIC_OUT_PATH];
+  for (const target of outTargets) {
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, csvContent, "utf8");
+  }
 
   console.log(
-    `\n✅ 총 ${rows.length}권 분석 완료 (소요 시간: ${formatElapsed(Date.now() - startedAt)}) → ${OUT_PATH}, ${PUBLIC_OUT_PATH}`
+    `\n✅ 총 ${rows.length}권 분석 완료 (소요 시간: ${formatElapsed(Date.now() - startedAt)}) → ${outTargets.join(", ")}`
   );
   if (failedCount > 0) {
     console.log(`⚠️ 실패: ${failedCount}권 (재실행 시 자동 재시도됨)`);
