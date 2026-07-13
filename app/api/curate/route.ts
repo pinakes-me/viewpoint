@@ -74,36 +74,63 @@ function classifyByMembership(
   };
 }
 
+// 그룹별 reason 금지어 - 반대 라벨 계열 관점 부사가 섞이는 것을 프롬프트+후처리 양쪽에서
+// 막는다 (STEP 6). 위반이 실제 관측된 neutral-critical 축만 우선 정의 - 다른 축에서
+// 위반이 관측되면 그때 추가한다.
+const REASON_BANNED_VOCAB: Partial<
+  Record<PerspectiveAxisId, { A: string[]; B: string[] }>
+> = {
+  "neutral-critical": {
+    // A(중립적 분석) 그룹 reason에 금지 - 비판 계열 어휘
+    A: ["비판적", "성찰", "문제를 제기", "문제 제기"],
+    // B(비판적 성찰) 그룹 reason에 금지 - 중립 계열 어휘
+    B: ["중립적", "사실적", "객관적"],
+  },
+};
+
 // reason 생성 전용 프롬프트 - GPT는 분류를 바꾸지 않고, 이미 확정된 membership 배정의
 // 근거를 태그·책소개에서 찾아 문장으로 설명하는 역할만 한다. 근거 자료가 빠지면
 // "구조 관점으로 분류된 책입니다" 같은 부실한 reason이 나온다는 게 확인된 바 있음(CLAUDE.md 참고).
 // 서평 헤드라인은 notion 출처(신문 서평)에만 존재해 nlk(사서추천) 도서와 입력이 비대칭해지므로
-// 넣지 않는다 - 두 출처 모두 태그+책소개(300자)로 통일 (2026-07-13 입력 대칭화).
+// 넣지 않는다 - 두 출처 모두 태그+책소개(500자)로 통일 (2026-07-13 입력 대칭화, STEP 6에서
+// 300->500자 확대 - AI 접점 언급이 405자 지점에 있던 "젊음의 나라" 사례 대응).
+// 섹션 헤더에 축 설명문을 넣지 않는 이유: 단일 프롬프트에서 반대 그룹 책의 reason이
+// 설명문 어휘("사실 전달·현상 정리" -> "사실적으로 정리")를 빌려 쓰는 오염이 관측됨 (STEP 6).
 function explainAssignmentPrompt(
   topic: string,
   labelA: string,
   labelB: string,
   axisId: PerspectiveAxisId,
   groupA: BookResult[],
-  groupB: BookResult[]
+  groupB: BookResult[],
+  extraNote?: string
 ): string {
-  const axisDescription = PERSPECTIVE_AXES.find((a) => a.id === axisId)?.description;
-
   const describe = (b: BookResult) => {
     const descText = b.description
-      ? `\n  소개: ${b.description.slice(0, 300)}`
+      ? `\n  소개: ${b.description.slice(0, 500)}`
       : "";
     return `- ${b.title} | 태그: ${b.topics}${descText}`;
   };
+
+  const banned = REASON_BANNED_VOCAB[axisId];
+  const bannedRule = banned
+    ? `\n6. 금지어: "${labelA}" 그룹의 reason에는 ${banned.A
+        .map((w) => `'${w}'`)
+        .join(", ")} 표현을 쓰지 말 것. "${labelB}" 그룹의 reason에는 ${banned.B
+        .map((w) => `'${w}'`)
+        .join(
+          ", "
+        )} 표현(예: '중립적으로/사실적으로/객관적으로 정리·설명·분석')을 쓰지 말 것.`
+    : "";
 
   return `너는 도서 전문 사서야. 아래 책들은 "${topic}" 주제에서 이미 "${labelA}" 또는
 "${labelB}" 관점으로 분류가 확정된 상태야. 너의 역할은 분류를 바꾸는 게 아니라, 그 책이
 왜 해당 관점에 해당하는지를 태그·책소개를 근거로 1~2문장 한국어로 설명하는 것뿐이야.
 
-"${labelA}" 관점 (${axisDescription?.A ?? labelA}):
+"${labelA}" 관점:
 ${groupA.map(describe).join("\n") || "(없음)"}
 
-"${labelB}" 관점 (${axisDescription?.B ?? labelB}):
+"${labelB}" 관점:
 ${groupB.map(describe).join("\n") || "(없음)"}
 
 규칙:
@@ -116,8 +143,8 @@ ${groupB.map(describe).join("\n") || "(없음)"}
    약하면 관점을 단정하는 표현 없이 내용과 주제 접점만 서술하고 문장을
    끝낼 것 — 억지로 관점을 부여하지 않는 것이 이 규칙보다 우선이야.
 4. 소설은 서사를 중심으로, 비소설은 저자의 분석을 중심으로 자연스럽게 서술할 것.
-5. # 태그 및 타 언어 사용 금지.
-
+5. # 태그 및 타 언어 사용 금지.${bannedRule}
+${extraNote ? `\n추가 지시: ${extraNote}\n` : ""}
 아래 JSON 형식만 반환 (마크다운 없이):
 { "reasons": { "책 제목": "이유 문장" } }`;
 }
@@ -138,6 +165,12 @@ async function generateReasons(prompt: string): Promise<Record<string, string>> 
       temperature: 0,
       response_format: { type: "json_object" },
     });
+    // groupB 전권 누락(2/2회 관측)이 토큰 한도로 JSON 뒤쪽이 잘리는 기계적 원인인지
+    // 판별용 - max_tokens는 미설정(모델 최대 출력 한도까지 허용)이라 length면 출력 캡 도달.
+    const finish = res.choices[0].finish_reason;
+    if (finish !== "stop") {
+      console.warn(`⚠️ reason 응답 finish_reason=${finish} (stop 아님 - 잘림 가능성)`);
+    }
     const text = res.choices[0].message.content ?? "{}";
     const parsed = JSON.parse(text);
     return (parsed?.reasons ?? {}) as Record<string, string>;
@@ -150,9 +183,28 @@ async function generateReasons(prompt: string): Promise<Record<string, string>> 
 const hasReason = (reasons: Record<string, string>, title: string) =>
   Object.prototype.hasOwnProperty.call(reasons, title);
 
-// GPT가 특정 그룹 전체를 JSON에서 누락하는 실패 모드(로컬 3회 중 1회 관측, CLAUDE.md
-// 알려진 이슈 참고)에 대응: 누락된 책만 모아 동일 프롬프트로 1회 재호출해 병합한다.
-// 재호출 후에도 누락이면 toGroupItem의 폴백 문구가 쓰인다.
+// 그룹-금지어 위반 탐지 (결정적 문자열 검사, STEP 6)
+function findViolations(
+  reasons: Record<string, string>,
+  axisId: PerspectiveAxisId,
+  groupA: BookResult[],
+  groupB: BookResult[]
+): { A: BookResult[]; B: BookResult[] } {
+  const banned = REASON_BANNED_VOCAB[axisId];
+  if (!banned) return { A: [], B: [] };
+  const check = (books: BookResult[], words: string[]) =>
+    books.filter(
+      (b) =>
+        hasReason(reasons, b.title) &&
+        words.some((w) => reasons[b.title].includes(w))
+    );
+  return { A: check(groupA, banned.A), B: check(groupB, banned.B) };
+}
+
+// GPT가 특정 그룹 전체를 JSON에서 누락하는 실패 모드(CLAUDE.md 알려진 이슈)와
+// 그룹-금지어 위반(관점모순)에 대응: 누락분과 위반분을 모아 한 번의 재호출로 처리해
+// 병합한다. 호출 상한은 누락·위반 합산 총 2회(첫 호출 + 재시도 1회).
+// 재호출 후에도 누락이면 toGroupItem의 폴백 문구가, 위반이면 그대로 수용하되 로그가 남는다.
 async function generateReasonsWithRetry(
   topic: string,
   labelA: string,
@@ -167,19 +219,47 @@ async function generateReasonsWithRetry(
 
   const missingA = groupA.filter((b) => !hasReason(first, b.title));
   const missingB = groupB.filter((b) => !hasReason(first, b.title));
-  if (missingA.length === 0 && missingB.length === 0) return first;
+  const viol = findViolations(first, axisId, groupA, groupB);
 
-  // 그룹별 누락 권수를 남겨 특정 그룹 편향인지 무작위인지 나중에 판별할 수 있게 한다
-  console.warn(
-    `⚠️ reason 누락 재시도: groupA ${missingA.length}권 / groupB ${missingB.length}권 (axis: ${axisId}, topic: ${topic})`
-  );
+  const needRetry =
+    missingA.length > 0 ||
+    missingB.length > 0 ||
+    viol.A.length > 0 ||
+    viol.B.length > 0;
+  if (!needRetry) return first;
+
+  // 그룹별 권수를 남겨 특정 그룹 편향인지 무작위인지 나중에 판별할 수 있게 한다
+  if (missingA.length > 0 || missingB.length > 0) {
+    console.warn(
+      `⚠️ reason 누락 재시도: groupA ${missingA.length}권 / groupB ${missingB.length}권 (axis: ${axisId}, topic: ${topic})`
+    );
+  }
+  if (viol.A.length > 0 || viol.B.length > 0) {
+    console.warn(
+      `⚠️ reason 관점모순 재생성: groupA ${viol.A.length}권 / groupB ${viol.B.length}권 (axis: ${axisId}, topic: ${topic})`
+    );
+  }
 
   const retry = await generateReasons(
-    explainAssignmentPrompt(topic, labelA, labelB, axisId, missingA, missingB)
+    explainAssignmentPrompt(
+      topic,
+      labelA,
+      labelB,
+      axisId,
+      [...missingA, ...viol.A],
+      [...missingB, ...viol.B],
+      viol.A.length > 0 || viol.B.length > 0
+        ? "이 책들 중 일부는 직전 응답에서 금지 표현을 사용했어. 관점을 단정하는 부사 없이 내용과 주제 접점만 서술할 것."
+        : undefined
+    )
   );
 
-  // 원 응답 우선 병합 - 같은 책이 양쪽 응답에 있으면 첫 응답 값을 유지
+  // 병합: 누락분은 원 응답 우선(원 응답에 없으므로 재시도 값이 자연히 채워짐),
+  // 위반분은 재생성이 목적이므로 재시도 값이 원 응답을 덮는다.
   const merged: Record<string, string> = { ...retry, ...first };
+  for (const b of [...viol.A, ...viol.B]) {
+    if (hasReason(retry, b.title)) merged[b.title] = retry[b.title];
+  }
 
   const stillMissing = [...missingA, ...missingB].filter(
     (b) => !hasReason(merged, b.title)
@@ -189,6 +269,17 @@ async function generateReasonsWithRetry(
       `⚠️ reason 재시도 후에도 누락: ${stillMissing.length}권 - 폴백 문구 사용 (${stillMissing.map((b) => b.title).join(", ")})`
     );
   }
+
+  // 재생성 후에도 위반이면 그대로 수용하되 로그에 남긴다 - 이 로그가 쌓이는 책은
+  // M2 채점 오류 후보로 수집 (reason이 정직하게 반대 관점을 서술한다는 신호일 수 있음)
+  const finalViol = findViolations(merged, axisId, groupA, groupB);
+  for (const b of finalViol.A) {
+    console.warn(`⚠️ 관점모순 잔존: ${b.title} (배정: ${labelA})`);
+  }
+  for (const b of finalViol.B) {
+    console.warn(`⚠️ 관점모순 잔존: ${b.title} (배정: ${labelB})`);
+  }
+
   return merged;
 }
 
