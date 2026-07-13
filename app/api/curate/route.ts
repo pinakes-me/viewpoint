@@ -147,6 +147,51 @@ async function generateReasons(prompt: string): Promise<Record<string, string>> 
   }
 }
 
+const hasReason = (reasons: Record<string, string>, title: string) =>
+  Object.prototype.hasOwnProperty.call(reasons, title);
+
+// GPT가 특정 그룹 전체를 JSON에서 누락하는 실패 모드(로컬 3회 중 1회 관측, CLAUDE.md
+// 알려진 이슈 참고)에 대응: 누락된 책만 모아 동일 프롬프트로 1회 재호출해 병합한다.
+// 재호출 후에도 누락이면 toGroupItem의 폴백 문구가 쓰인다.
+async function generateReasonsWithRetry(
+  topic: string,
+  labelA: string,
+  labelB: string,
+  axisId: PerspectiveAxisId,
+  groupA: BookResult[],
+  groupB: BookResult[]
+): Promise<Record<string, string>> {
+  const first = await generateReasons(
+    explainAssignmentPrompt(topic, labelA, labelB, axisId, groupA, groupB)
+  );
+
+  const missingA = groupA.filter((b) => !hasReason(first, b.title));
+  const missingB = groupB.filter((b) => !hasReason(first, b.title));
+  if (missingA.length === 0 && missingB.length === 0) return first;
+
+  // 그룹별 누락 권수를 남겨 특정 그룹 편향인지 무작위인지 나중에 판별할 수 있게 한다
+  console.warn(
+    `⚠️ reason 누락 재시도: groupA ${missingA.length}권 / groupB ${missingB.length}권 (axis: ${axisId}, topic: ${topic})`
+  );
+
+  const retry = await generateReasons(
+    explainAssignmentPrompt(topic, labelA, labelB, axisId, missingA, missingB)
+  );
+
+  // 원 응답 우선 병합 - 같은 책이 양쪽 응답에 있으면 첫 응답 값을 유지
+  const merged: Record<string, string> = { ...retry, ...first };
+
+  const stillMissing = [...missingA, ...missingB].filter(
+    (b) => !hasReason(merged, b.title)
+  );
+  if (stillMissing.length > 0) {
+    console.warn(
+      `⚠️ reason 재시도 후에도 누락: ${stillMissing.length}권 - 폴백 문구 사용 (${stillMissing.map((b) => b.title).join(", ")})`
+    );
+  }
+  return merged;
+}
+
 function toGroupItem(
   book: BookResult,
   reasons: Record<string, string>,
@@ -363,15 +408,13 @@ export async function POST(req: Request) {
 
       const reasons =
         rawA.length > 0 || rawB.length > 0
-          ? await generateReasons(
-              explainAssignmentPrompt(
-                topic,
-                labelA,
-                labelB,
-                perspectiveId,
-                rawA,
-                rawB
-              )
+          ? await generateReasonsWithRetry(
+              topic,
+              labelA,
+              labelB,
+              perspectiveId,
+              rawA,
+              rawB
             )
           : {};
 
