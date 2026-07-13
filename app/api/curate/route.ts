@@ -75,34 +75,30 @@ function classifyByMembership(
 }
 
 // reason 생성 전용 프롬프트 - GPT는 분류를 바꾸지 않고, 이미 확정된 membership 배정의
-// 근거를 태그·서평·책소개에서 찾아 문장으로 설명하는 역할만 한다. 근거 자료가 빠지면
+// 근거를 태그·책소개에서 찾아 문장으로 설명하는 역할만 한다. 근거 자료가 빠지면
 // "구조 관점으로 분류된 책입니다" 같은 부실한 reason이 나온다는 게 확인된 바 있음(CLAUDE.md 참고).
+// 서평 헤드라인은 notion 출처(신문 서평)에만 존재해 nlk(사서추천) 도서와 입력이 비대칭해지므로
+// 넣지 않는다 - 두 출처 모두 태그+책소개(300자)로 통일 (2026-07-13 입력 대칭화).
 function explainAssignmentPrompt(
   topic: string,
   labelA: string,
   labelB: string,
   axisId: PerspectiveAxisId,
   groupA: BookResult[],
-  groupB: BookResult[],
-  reviewMap: Record<number, string[]>
+  groupB: BookResult[]
 ): string {
   const axisDescription = PERSPECTIVE_AXES.find((a) => a.id === axisId)?.description;
 
   const describe = (b: BookResult) => {
-    const headlines = reviewMap[b.id] || [];
-    const headlineText =
-      headlines.length > 0
-        ? `\n  서평: ${headlines.slice(0, 3).join(" / ")}`
-        : "";
     const descText = b.description
-      ? `\n  소개: ${b.description.slice(0, 150)}`
+      ? `\n  소개: ${b.description.slice(0, 300)}`
       : "";
-    return `- ${b.title} | 태그: ${b.topics}${descText}${headlineText}`;
+    return `- ${b.title} | 태그: ${b.topics}${descText}`;
   };
 
   return `너는 도서 전문 사서야. 아래 책들은 "${topic}" 주제에서 이미 "${labelA}" 또는
 "${labelB}" 관점으로 분류가 확정된 상태야. 너의 역할은 분류를 바꾸는 게 아니라, 그 책이
-왜 해당 관점에 해당하는지를 태그·서평·책소개를 근거로 1~2문장 한국어로 설명하는 것뿐이야.
+왜 해당 관점에 해당하는지를 태그·책소개를 근거로 1~2문장 한국어로 설명하는 것뿐이야.
 
 "${labelA}" 관점 (${axisDescription?.A ?? labelA}):
 ${groupA.map(describe).join("\n") || "(없음)"}
@@ -131,7 +127,8 @@ async function generateReasons(prompt: string): Promise<Record<string, string>> 
         },
         { role: "user", content: prompt },
       ],
-      temperature: 0.3,
+      // 채점 파이프라인(/api/analyze-score)과 동일하게 0 - 같은 입력이면 같은 reason이 나오도록
+      temperature: 0,
       response_format: { type: "json_object" },
     });
     const text = res.choices[0].message.content ?? "{}";
@@ -357,10 +354,6 @@ export async function POST(req: Request) {
       const { groupA: rawA, groupB: rawB, middleGround: rawMiddle } =
         classifyByMembership(books, perspectiveId);
 
-      const bookIds = [...rawA, ...rawB].map((b) => b.id);
-      const reviewMap =
-        bookIds.length > 0 ? await getReviewsByBookIds(bookIds) : {};
-
       const reasons =
         rawA.length > 0 || rawB.length > 0
           ? await generateReasons(
@@ -370,8 +363,7 @@ export async function POST(req: Request) {
                 labelB,
                 perspectiveId,
                 rawA,
-                rawB,
-                reviewMap
+                rawB
               )
             )
           : {};
