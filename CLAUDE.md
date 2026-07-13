@@ -147,12 +147,20 @@
 - membership degree 측정 품질(GPT가 명시적 신호에도 0.6 부근으로 보수적으로
   수렴하는 경향)은 UI로 해결할 수 없는 장기 과제. 지금은 손대지 않고 별도
   트랙으로 남겨둠 — 연구노트 3장 프롬프트 튜닝 로그, 8장 한계 참고.
-  ~~reason 문장이 매번 달라져 일관성이 낮은 문제~~ → temperature 0 적용으로
-  대폭 완화(골격 고정, 꼬리 절만 간헐 변동 — API 수준 비결정성으로 잔존,
-  2026-07-13).
-- GPT가 reason 생성 시 특정 그룹 전체를 JSON에서 누락하는 실패 모드 간헐
-  발생(로컬 3회 중 1회 관측, groupB 전권 폴백 문구 노출). temperature 0으로도
-  해소 안 됨. 개선 후보: 그룹 누락 시 재시도 또는 그룹별 분리 호출.
+  ~~reason 문장이 매번 달라져 일관성이 낮은 문제~~ → temperature 0 + 금지어
+  맵(`REASON_BANNED_VOCAB`)으로 완화(골격 고정, 꼬리 절만 간헐 변동 — API
+  수준 비결정성으로 잔존, 2026-07-13).
+- generateReasons의 groupB 행동적 누락 편향: 특정 그룹 전체가 JSON에서
+  누락되는 실패 모드가 3/3회 모두 groupB에서 관측됨. finish_reason=stop
+  확인으로 토큰 잘림(length) 가설은 기각 — 기계적 원인 아닌 행동적 누락.
+  재시도 로직(`generateReasonsWithRetry`)이 회수 중. 검증 아이디어: 그룹
+  나열 순서 스왑 관측.
+- "관점모순 잔존" 로그(`⚠️ 관점모순 잔존: {제목} (배정: {라벨})`)는 M2 채점
+  오류 후보 수집기 — reason이 정직하게 반대 관점을 서술한다는 신호일 수
+  있으므로 주기적으로 확인할 것.
+- `REASON_BANNED_VOCAB`(app/api/curate/route.ts)은 위반이 실제 관측된
+  neutral-critical 축만 등재된 확장 구조 — 다른 축에서 위반 관측 시 항목만
+  추가하면 됨.
 - `components/BookCard.tsx`의 `stance`가 `"A"|"B"|"neutral"`로 확장됐지만
   (STEP E), `hooks/useShelf.ts`/`ShelfItem`은 아직 `"A"|"B"`만 지원. "내 서재에
   저장" 시 `stance === "neutral"`이면 임시로 `"A"`로 캐스팅됨 — middleGround
