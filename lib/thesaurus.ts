@@ -9,12 +9,13 @@ export const THESAURUS_CLUSTERS = [
     id: "ai-tech",
     label: "AI·기술·미래",
     representativeTag: "인공지능",
+    // R4 2026-07-13: '미래사회'는 비기술적 미래 서사까지 끌어오는 과광의 유의어라 제거.
+    // AI 접점이 실재하는 책은 정확한 태그(#기술과인간 등)로 잔류시킴.
     synonyms: [
       "AI시대",
       "생성형AI",
       "거대언어모델",
       "미래기술",
-      "미래사회",
       "기술과인간",
       "기술과사회",
     ],
