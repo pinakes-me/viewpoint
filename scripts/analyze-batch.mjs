@@ -24,7 +24,7 @@ const PUBLIC_OUT_PATH = path.join(ROOT, "public", "data", "analyze_scores.csv");
 //                   기존 CSV의 버전을 그대로 승계).
 // --ids/--out을 함께 쓰면 라이브 데이터 무변경으로 실험 채점이 가능하다.
 // 주의: 해시 공식(topicsHash)은 변경 금지 — 바꾸면 전체 캐시가 무효화되어 293권 재채점이 유발됨.
-const VALID_PROMPT_VERSIONS = ["v3", "v4a", "v4b"];
+const VALID_PROMPT_VERSIONS = ["v3", "v4a", "v4b", "v4c", "v4d"];
 
 function parseCliOptions() {
   const argv = process.argv.slice(2);

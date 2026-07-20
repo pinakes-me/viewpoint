@@ -15,7 +15,7 @@ type AxisScore = { a: number; b: number };
 type BookScores = Record<AnalyzeAxisId, AxisScore>;
 
 // M3 실험용 프롬프트 버전 스위치. 기본값 v3 = 현행 프롬프트 그대로 (라이브 안전장치).
-const PROMPT_VERSIONS = ["v3", "v4a", "v4b"] as const;
+const PROMPT_VERSIONS = ["v3", "v4a", "v4b", "v4c", "v4d"] as const;
 type PromptVersion = (typeof PROMPT_VERSIONS)[number];
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -60,24 +60,34 @@ results에는 입력된 모든 책을 포함하고, scores에는 6개 축을 모
 
 // M3 실험 v4a: v3를 복제하고 규칙 10~13(P1~P4)을 추가한 버전.
 // P1의 소설 4축 0/0은 프롬프트 지시와 별개로 응답 조립 단계에서 코드로도 강제된다.
-const V4A_EXTRA_RULES = `
-10. 소설 규약: topics에 #소설이 포함된 책은 ①indiv-struct와 ⑥narrative-explain 두 축만 채점하고, 나머지 4축(neutral-critical, now-future, cause-solution, acad-pop)은 반드시 0/0으로 반환할 것.
+// M3 2라운드에서 P1 규칙(규칙 10)과 P2~P4 앵커(규칙 11~13)를 분리 — v4a/v4b 프롬프트는
+// 재조합해도 1라운드와 바이트 동일하게 유지된다(이력 보존).
+const V4_P1_RULE = `
+10. 소설 규약: topics에 #소설이 포함된 책은 ①indiv-struct와 ⑥narrative-explain 두 축만 채점하고, 나머지 4축(neutral-critical, now-future, cause-solution, acad-pop)은 반드시 0/0으로 반환할 것.`;
+
+const V4_ANCHOR_RULES = `
 11. 학술↔대중 판정 기준: A(학술·전문)는 해당 분야의 선행 연구·이론·전문 용어를 전제로 논증하는 책(학술서·전문서·연구서). B(대중·실용)는 일반 독자가 배경지식 없이 읽도록 쓰인 책(교양서·실용서·에세이). 저자의 직업이 아니라 서술 방식과 상정 독자로 판단할 것. 전문 주제라도 교양 문체면 B (예: 대중 과학서).
 12. 현재↔미래 판정 기준: 책이 현재의 사회·현상·문제를 분석 대상으로 삼으면 A(현재 진단). 미래 예측·전망·시나리오가 중심이면 B. 시간 차원 자체가 논점이 아닌 경우(과거사 서술, 무시간적 이론서 등)에만 0/0. 명시적 시간 표현이 없다는 이유로 0/0을 주지 말 것 — 현재를 다루는 책은 대부분 A다.
 13. 개인↔구조 판정 기준: 소재가 아니라 논증의 귀착점으로 판단할 것. 개인의 사례·고통·경험이 등장해도 그것이 제도·시스템·사회 구조의 문제를 논증하는 근거로 쓰이면 B(구조). 구조적 배경이 언급돼도 결론이 개인의 선택·성장·실천이면 A(개인).`;
 
-// M3 실험 v4b: v4a에 책소개(description) 입력을 추가한 버전.
+// M3 실험 v4b/v4d: 책소개(description) 입력을 추가한 버전용 규칙.
 const V4B_EXTRA_RULES = `
 14. 이 버전에서는 책 입력에 "소개:"(책소개)가 포함됨. 규칙 3의 판단 근거를 '제목·topics 태그·책소개'로 확장해, 태그와 책소개를 함께 근거로 판단하되, 책소개의 홍보성 문체(출판사 소개글)에 이끌려 관점을 중립으로 뭉개지 말 것.`;
 
+// M3 2라운드(v4c/v4d): v4a의 P1 프롬프트 규칙이 모델의 0/0 사용을 재정당화해 비문학의
+// ②⑥ 축까지 0/0으로 오염시키는 회귀가 관측됨 → P1은 코드 강제(enforceFictionZero)만
+// 남기고 프롬프트에서 축 건너뛰기 언급을 완전히 제거. 규칙 번호가 9→11로 건너뛰는 것은
+// v4a와의 텍스트 공유를 위한 의도적 선택(모델 판단에 영향 없음).
 const SYSTEM_PROMPTS: Record<PromptVersion, string> = {
   v3: SYSTEM_PROMPT_V3,
-  v4a: SYSTEM_PROMPT_V3 + V4A_EXTRA_RULES,
-  v4b: SYSTEM_PROMPT_V3 + V4A_EXTRA_RULES + V4B_EXTRA_RULES,
+  v4a: SYSTEM_PROMPT_V3 + V4_P1_RULE + V4_ANCHOR_RULES,
+  v4b: SYSTEM_PROMPT_V3 + V4_P1_RULE + V4_ANCHOR_RULES + V4B_EXTRA_RULES,
+  v4c: SYSTEM_PROMPT_V3 + V4_ANCHOR_RULES,
+  v4d: SYSTEM_PROMPT_V3 + V4_ANCHOR_RULES + V4B_EXTRA_RULES,
 };
 
-// P1 코드 강제: v4a/v4b에서 #소설 책의 4축을 응답과 무관하게 0/0으로 덮어쓴다.
-// v3 경로는 건드리지 않는다 (라이브 무영향 안전장치).
+// P1 코드 강제: v3를 제외한 모든 실험 버전에서 #소설 책의 4축을 응답과 무관하게
+// 0/0으로 덮어쓴다. v3 경로는 건드리지 않는다 (라이브 무영향 안전장치).
 const FICTION_FORCED_ZERO_AXES: AnalyzeAxisId[] = [
   "neutral-critical",
   "now-future",
@@ -166,23 +176,24 @@ export async function POST(req: Request) {
       );
     }
 
-    // v4b 스모크 검증용: 소개 조회가 조용히 실패하면 v4b가 v4a 중복 측정이 되므로
-    // 소개가 실제 입력에 포함되는 권수를 로그로 남긴다.
-    if (promptVersion === "v4b") {
+    // 소개 주입 버전(v4b/v4d) 스모크 검증용: 소개 조회가 조용히 실패하면 소개 없는
+    // 버전과 중복 측정이 되므로, 소개가 실제 입력에 포함되는 권수를 로그로 남긴다.
+    const usesDescription = promptVersion === "v4b" || promptVersion === "v4d";
+    if (usesDescription) {
       const withDesc = books.filter((b) => b.description.trim().length > 0);
       console.log(
-        `🧪 v4b 입력: ${withDesc.length}/${books.length}권 소개 포함` +
+        `🧪 ${promptVersion} 입력: ${withDesc.length}/${books.length}권 소개 포함` +
           (withDesc.length > 0
             ? ` (예: [${withDesc[0].id}] ${withDesc[0].description.slice(0, 30)}…)`
-            : " ⚠️ 소개 없음 - v4a와 동일 입력이 됨")
+            : " ⚠️ 소개 없음 - 소개 미주입 버전과 동일 입력이 됨")
       );
     }
 
-    // v3/v4a 입력 라인은 기존과 동일. v4b만 소개(500자)를 덧붙인다.
+    // v3/v4a/v4c 입력 라인은 기존과 동일. v4b/v4d만 소개(500자)를 덧붙인다.
     const bookList = books
       .map((b) => {
         const base = `- id: ${b.id} | 제목: ${b.title} | topics: ${b.topics}`;
-        if (promptVersion === "v4b" && b.description) {
+        if (usesDescription && b.description) {
           return `${base} | 소개: ${b.description.slice(0, 500)}`;
         }
         return base;
