@@ -150,7 +150,8 @@ export async function POST(req: Request) {
     const body = await req.json();
     const inputBooks = Array.isArray(body?.books) ? body.books : [];
 
-    const rawVersion = body?.promptVersion ?? "v3";
+    // M4(2026-07-14)에서 기본 버전 v3 -> v4d 승격. v3~v4c는 명시 지정 시 계속 사용 가능.
+    const rawVersion = body?.promptVersion ?? "v4d";
     if (!PROMPT_VERSIONS.includes(rawVersion)) {
       return NextResponse.json(
         { error: `알 수 없는 promptVersion: ${rawVersion}` },

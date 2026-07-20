@@ -6,7 +6,8 @@ import { createClient } from "@supabase/supabase-js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const API_URL = "http://localhost:3000/api/analyze-score";
-const PROMPT_VERSION = "v3";
+// M4(2026-07-14)에서 기본 버전 v3 -> v4d 승격. v3~v4c는 --prompt로 명시 지정 시 계속 사용 가능.
+const PROMPT_VERSION = "v4d";
 const BATCH_SIZE = 10;
 const PAGE_SIZE = 1000; // Supabase 기본 1000행 제한 대응용 페이지 크기
 const OUT_PATH = path.join(ROOT, "data", "analyze_scores.csv");
@@ -278,7 +279,13 @@ async function main() {
         versionById.set(key, cached.promptVersion);
       }
       // 캐시에 없고 대상도 아닌 책은 결과에서 제외(기존 채점 실패 시 처리와 동일)
-    } else if (cached && cached.topicsHash === topicsHash(book)) {
+    } else if (
+      cached &&
+      cached.topicsHash === topicsHash(book) &&
+      // 버전 인지 캐싱(M4): 해시가 같아도 다른 프롬프트 버전으로 채점된 행은 재채점.
+      // 같은 버전으로 재실행하면 정상 캐시된다.
+      cached.promptVersion === promptVersion
+    ) {
       scoresById.set(key, cached.scores);
       versionById.set(key, cached.promptVersion);
     } else {

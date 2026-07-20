@@ -10,8 +10,11 @@
 
 ## ⚠️ 절대 규칙 (매 세션 최우선 확인)
 
-1. **`data/analyze_scores_v3_20260705.csv`, `data/book_clusters_v3_20260705.csv`는
-   절대 덮어쓰지 않는다.** 학위논문 고정 데이터.
+1. **버전 스냅샷 파일(`data/analyze_scores_v3_20260705.csv`,
+   `data/book_clusters_v3_20260705.csv`, `data/analyze_scores_v4_20260708.csv`,
+   `data/book_clusters_v4_20260708.csv`, `data/analyze_scores_v5_20260720.csv`)은
+   절대 덮어쓰지 않는다.** v3는 학위논문 고정 데이터, 이후 버전은 재현용 동결본.
+   (스냅샷↔프롬프트 버전 대응표는 아래 별도 섹션 참고.)
 2. **Supabase 쓰기 작업은 반드시 프리뷰(dry-run) 모드를 기본값으로 하고,
    `--apply` 같은 명시적 플래그가 있어야 실제 UPDATE가 실행되게 만든다.**
    쓰기 직전에는 대상 데이터를 CSV로 백업한다.
@@ -128,6 +131,25 @@
   - STEP F-5 문서화만: 알려진 이슈에 membership 품질 이슈 + neutral stance
     캐스팅 이슈 기록 (`48d966b`)
   - 추가로 "중립적 분석↔비판적 성찰" 축 설명 문구에서 "·변화 촉구" 제거 (`1252315`)
+- **M3 채점 프롬프트 실험 (2026-07-13)**: v4a의 P1 프롬프트 규칙(소설 축
+  건너뛰기 지시)이 0/0 남발을 재정당화해 비문학까지 오염 → v4c/v4d(P1
+  프롬프트 규칙 제거, 코드 강제만 유지)로 해소, **v4d 승격 결정**
+  (동시대 v3 49.3% → 58.5%, 안정률 88.9%). 실험 데이터:
+  `data/experiments/M3_*_20260713.csv` (15권×5후보×3회 = 1350행).
+- **M4 v4d 승격 (2026-07-20)**: 기본 promptVersion을 v3 → **v4d**로 전환
+  (API·배치 양쪽). analyze-batch에 버전 인지 캐싱 도입(해시 일치 + 행의
+  prompt_version == 실행 버전일 때만 캐시). 293권 전량 v4d 재채점 후
+  `data/analyze_scores_v5_20260720.csv`로 스냅샷 동결.
+
+## 스냅샷 ↔ 프롬프트 버전 대응표
+
+⚠️ 스냅샷 버전(v3/v4/v5)과 채점 프롬프트 버전(v3/v4a~v4d)은 **별개 체계**.
+
+| 스냅샷 파일 | 채점 프롬프트 | 비고 |
+|---|---|---|
+| `analyze_scores_v3_20260705.csv` | prompt v3 | 학위논문 고정 데이터 (동결) |
+| `analyze_scores_v4_20260708.csv` | prompt v3 | + 원천 태그 정규화 반영 (동결) |
+| `analyze_scores_v5_20260720.csv` | **prompt v4d** | v4d 전량 채점본, 현행 라이브와 동일 (동결) |
 
 ## 알려진 이슈
 
@@ -161,6 +183,11 @@
 - `REASON_BANNED_VOCAB`(app/api/curate/route.ts)은 위반이 실제 관측된
   neutral-critical 축만 등재된 확장 구조 — 다른 축에서 위반 관측 시 항목만
   추가하면 됨.
+- ④원인↔방안 축은 채점 프롬프트에 정의 앵커가 없음(P2 학술↔대중, P3
+  현재↔미래, P4 개인↔구조만 앵커 보유) — 다음 프롬프트 튜닝 후보.
+- 표상 기인 채점 오류 잔존 사례: "공감사회를 위한 담론들"이 ⑤학술↔대중
+  축에서 M3 실험 15회 전부 일관되게 오판됨 — 프롬프트가 아니라 태그·소개
+  표상의 문제일 가능성이 높아 태그 감사 후보.
 - `components/BookCard.tsx`의 `stance`가 `"A"|"B"|"neutral"`로 확장됐지만
   (STEP E), `hooks/useShelf.ts`/`ShelfItem`은 아직 `"A"|"B"`만 지원. "내 서재에
   저장" 시 `stance === "neutral"`이면 임시로 `"A"`로 캐스팅됨 — middleGround
