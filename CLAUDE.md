@@ -140,6 +140,16 @@
   (API·배치 양쪽). analyze-batch에 버전 인지 캐싱 도입(해시 일치 + 행의
   prompt_version == 실행 버전일 때만 캐시). 293권 전량 v4d 재채점 후
   `data/analyze_scores_v5_20260720.csv`로 스냅샷 동결.
+- **장르 필터 키워드 개정 + P1 서사픽션 확장 (2026-07-20)**: **문학 필터의
+  조작적 정의를 "관점 축이 무의미한 서사 픽션"(소설·그림책·어린이문학)으로
+  확정** — KDC 문학류 개념과 의도적으로 다름 (Hailey 판정). 이에 따라
+  `lib/analyzeTopics.ts`의 `FICTION_KEYWORDS`에서 '판타지'→'판타지소설'
+  조이기(#남성판타지 유형② 거짓 적중 교정), '에세이' 제거(book 51 비문학
+  복귀). P1 코드 강제(`enforceFictionZero`)의 판정 조건을 '#소설' 단독에서
+  `FICTION_KEYWORDS` 공유로 확장 — 현행 적용 태그: 소설(부분 문자열,
+  SF소설·판타지소설·성장소설 등 포함)·어린이문학·그림책. 영향 도서
+  15권(어린이문학·그림책류) 재채점, 문학 필터 50권 전권 ②③④⑤ 회색 확인.
+  ※ 이 건은 시소러스 개정 계보(R1~R4)와 별개 — META_GENRE는 무변경.
 
 ## 스냅샷 ↔ 프롬프트 버전 대응표
 
@@ -188,6 +198,13 @@
 - 표상 기인 채점 오류 잔존 사례: "공감사회를 위한 담론들"이 ⑤학술↔대중
   축에서 M3 실험 15회 전부 일관되게 오판됨 — 프롬프트가 아니라 태그·소개
   표상의 문제일 가능성이 높아 태그 감사 후보.
+- 장르 정의 단일 출처화(정리 후보): 장르 신호 출처가 세 곳으로 분산돼
+  있었음 — ① `lib/thesaurus.ts` META_GENRE(시소러스 칩·클러스터용)
+  ② `lib/analyzeTopics.ts` FICTION_KEYWORDS(Labs 장르 필터)
+  ③ `enforceFictionZero`(P1 코드 강제). 2026-07-20 개정으로 ②③은
+  FICTION_KEYWORDS 공유로 통합됐으나 ①은 여전히 별도 — 세 정의가 각자
+  진화하면 유형② 거짓 적중 같은 불일치가 재발하므로 공유 상수로 완전
+  통합하는 것이 정리 후보.
 - `components/BookCard.tsx`의 `stance`가 `"A"|"B"|"neutral"`로 확장됐지만
   (STEP E), `hooks/useShelf.ts`/`ShelfItem`은 아직 `"A"|"B"`만 지원. "내 서재에
   저장" 시 `stance === "neutral"`이면 임시로 `"A"`로 캐스팅됨 — middleGround

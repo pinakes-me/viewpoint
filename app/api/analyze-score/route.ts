@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { ANALYZE_AXES, type AnalyzeAxisId } from "@/lib/analyzeAxes";
+import { FICTION_KEYWORDS } from "@/lib/analyzeTopics";
 
 const MAX_BOOKS = 10;
 
@@ -133,8 +134,13 @@ function enforceFictionZero(
   promptVersion: PromptVersion
 ): { id: string; scores: BookScores }[] {
   if (promptVersion === "v3") return results;
+  // 서사 픽션 동일 논리 — 그림책·어린이문학도 ②③④⑤ 무의미 (2026-07-20 Hailey 판정).
+  // 판정 키워드는 Labs 장르 필터와 동일한 FICTION_KEYWORDS를 공유(단일 출처) —
+  // 강제 대상과 필터 표시 대상이 어긋나는 불일치를 구조적으로 방지한다.
   const fictionIds = new Set(
-    books.filter((b) => b.topics.includes("#소설")).map((b) => b.id)
+    books
+      .filter((b) => FICTION_KEYWORDS.some((k) => b.topics.includes(k)))
+      .map((b) => b.id)
   );
   for (const r of results) {
     if (!fictionIds.has(r.id)) continue;
