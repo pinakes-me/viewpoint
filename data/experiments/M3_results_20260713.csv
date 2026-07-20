@@ -1,0 +1,811 @@
+candidate,run,book_id,title,axis,a,b
+v3,1,5,슬픈 살인,indiv-struct,0.7,0.3
+v3,1,5,슬픈 살인,neutral-critical,0.4,0.6
+v3,1,5,슬픈 살인,now-future,0.6,0.4
+v3,1,5,슬픈 살인,cause-solution,0.5,0.5
+v3,1,5,슬픈 살인,acad-pop,0.3,0.7
+v3,1,5,슬픈 살인,narrative-explain,0,0.8
+v3,1,160,필연적 혼자의 시대,indiv-struct,0.6,0.4
+v3,1,160,필연적 혼자의 시대,neutral-critical,0.5,0.5
+v3,1,160,필연적 혼자의 시대,now-future,0,0
+v3,1,160,필연적 혼자의 시대,cause-solution,0,0
+v3,1,160,필연적 혼자의 시대,acad-pop,0.4,0.6
+v3,1,160,필연적 혼자의 시대,narrative-explain,0,0.8
+v3,1,54,마리아 지뷜라 메리안,indiv-struct,0.5,0.5
+v3,1,54,마리아 지뷜라 메리안,neutral-critical,0.4,0.6
+v3,1,54,마리아 지뷜라 메리안,now-future,0,0
+v3,1,54,마리아 지뷜라 메리안,cause-solution,0,0
+v3,1,54,마리아 지뷜라 메리안,acad-pop,0.6,0.4
+v3,1,54,마리아 지뷜라 메리안,narrative-explain,0,0.8
+v3,1,122,"AI 제국: 권력, 자본, 노동",indiv-struct,0.3,0.7
+v3,1,122,"AI 제국: 권력, 자본, 노동",neutral-critical,0.2,0.8
+v3,1,122,"AI 제국: 권력, 자본, 노동",now-future,0,0
+v3,1,122,"AI 제국: 권력, 자본, 노동",cause-solution,0,0
+v3,1,122,"AI 제국: 권력, 자본, 노동",acad-pop,0.8,0.2
+v3,1,122,"AI 제국: 권력, 자본, 노동",narrative-explain,0,0.9
+v3,1,125,포식자들의 시간,indiv-struct,0.3,0.7
+v3,1,125,포식자들의 시간,neutral-critical,0.2,0.8
+v3,1,125,포식자들의 시간,now-future,0,0
+v3,1,125,포식자들의 시간,cause-solution,0,0
+v3,1,125,포식자들의 시간,acad-pop,0.8,0.2
+v3,1,125,포식자들의 시간,narrative-explain,0,0.9
+v3,1,91,자연은 성을 둘로 나누지 않는다,indiv-struct,0.5,0.5
+v3,1,91,자연은 성을 둘로 나누지 않는다,neutral-critical,0.3,0.7
+v3,1,91,자연은 성을 둘로 나누지 않는다,now-future,0,0
+v3,1,91,자연은 성을 둘로 나누지 않는다,cause-solution,0,0
+v3,1,91,자연은 성을 둘로 나누지 않는다,acad-pop,0.4,0.6
+v3,1,91,자연은 성을 둘로 나누지 않는다,narrative-explain,0,0.8
+v3,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,indiv-struct,0.5,0.5
+v3,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,neutral-critical,0.3,0.7
+v3,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,now-future,0.8,0.2
+v3,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,cause-solution,0.6,0.4
+v3,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,acad-pop,0.7,0.3
+v3,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,narrative-explain,0.3,0.7
+v3,1,7,나의 친구들,indiv-struct,0.8,0.2
+v3,1,7,나의 친구들,neutral-critical,0.5,0.5
+v3,1,7,나의 친구들,now-future,0,0
+v3,1,7,나의 친구들,cause-solution,0,0
+v3,1,7,나의 친구들,acad-pop,0,0
+v3,1,7,나의 친구들,narrative-explain,0.9,0.1
+v3,1,171,88번 버스의 기적,indiv-struct,0.9,0.1
+v3,1,171,88번 버스의 기적,neutral-critical,0.5,0.5
+v3,1,171,88번 버스의 기적,now-future,0,0
+v3,1,171,88번 버스의 기적,cause-solution,0,0
+v3,1,171,88번 버스의 기적,acad-pop,0,0
+v3,1,171,88번 버스의 기적,narrative-explain,0.9,0.1
+v3,1,176,공룡의 이동 경로 : 김화진 소설,indiv-struct,0.7,0.3
+v3,1,176,공룡의 이동 경로 : 김화진 소설,neutral-critical,0.5,0.5
+v3,1,176,공룡의 이동 경로 : 김화진 소설,now-future,0,0
+v3,1,176,공룡의 이동 경로 : 김화진 소설,cause-solution,0,0
+v3,1,176,공룡의 이동 경로 : 김화진 소설,acad-pop,0,0
+v3,1,176,공룡의 이동 경로 : 김화진 소설,narrative-explain,0.8,0.2
+v3,1,213,공감사회를 위한 담론들,indiv-struct,0.6,0.4
+v3,1,213,공감사회를 위한 담론들,neutral-critical,0.4,0.6
+v3,1,213,공감사회를 위한 담론들,now-future,0.5,0.5
+v3,1,213,공감사회를 위한 담론들,cause-solution,0.3,0.7
+v3,1,213,공감사회를 위한 담론들,acad-pop,0.4,0.6
+v3,1,213,공감사회를 위한 담론들,narrative-explain,0.3,0.7
+v3,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,indiv-struct,0.4,0.6
+v3,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,neutral-critical,0.5,0.5
+v3,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,now-future,0,0
+v3,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,cause-solution,0,0
+v3,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,acad-pop,0.6,0.4
+v3,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,narrative-explain,0.2,0.8
+v3,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,indiv-struct,0.6,0.4
+v3,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,neutral-critical,0.4,0.6
+v3,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,now-future,0.3,0.7
+v3,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,cause-solution,0.4,0.6
+v3,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,acad-pop,0.5,0.5
+v3,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,narrative-explain,0.2,0.8
+v3,1,21,교육은 유전을 이길 수 있는가,indiv-struct,0.4,0.6
+v3,1,21,교육은 유전을 이길 수 있는가,neutral-critical,0.5,0.5
+v3,1,21,교육은 유전을 이길 수 있는가,now-future,0.5,0.5
+v3,1,21,교육은 유전을 이길 수 있는가,cause-solution,0.4,0.6
+v3,1,21,교육은 유전을 이길 수 있는가,acad-pop,0.7,0.3
+v3,1,21,교육은 유전을 이길 수 있는가,narrative-explain,0,0.8
+v3,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,indiv-struct,0.5,0.5
+v3,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,neutral-critical,0.4,0.6
+v3,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,now-future,0,0
+v3,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,cause-solution,0,0
+v3,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,acad-pop,0.3,0.7
+v3,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,narrative-explain,0,0.8
+v3,2,5,슬픈 살인,indiv-struct,0.7,0.3
+v3,2,5,슬픈 살인,neutral-critical,0.4,0.6
+v3,2,5,슬픈 살인,now-future,0.6,0.4
+v3,2,5,슬픈 살인,cause-solution,0.5,0.5
+v3,2,5,슬픈 살인,acad-pop,0.4,0.6
+v3,2,5,슬픈 살인,narrative-explain,0.2,0.8
+v3,2,160,필연적 혼자의 시대,indiv-struct,0.6,0.4
+v3,2,160,필연적 혼자의 시대,neutral-critical,0.4,0.6
+v3,2,160,필연적 혼자의 시대,now-future,0.5,0.5
+v3,2,160,필연적 혼자의 시대,cause-solution,0.3,0.7
+v3,2,160,필연적 혼자의 시대,acad-pop,0.5,0.5
+v3,2,160,필연적 혼자의 시대,narrative-explain,0,1
+v3,2,54,마리아 지뷜라 메리안,indiv-struct,0.5,0.5
+v3,2,54,마리아 지뷜라 메리안,neutral-critical,0.4,0.6
+v3,2,54,마리아 지뷜라 메리안,now-future,0,0
+v3,2,54,마리아 지뷜라 메리안,cause-solution,0,0
+v3,2,54,마리아 지뷜라 메리안,acad-pop,0.6,0.4
+v3,2,54,마리아 지뷜라 메리안,narrative-explain,0.3,0.7
+v3,2,122,"AI 제국: 권력, 자본, 노동",indiv-struct,0.4,0.6
+v3,2,122,"AI 제국: 권력, 자본, 노동",neutral-critical,0.3,0.7
+v3,2,122,"AI 제국: 권력, 자본, 노동",now-future,0,0
+v3,2,122,"AI 제국: 권력, 자본, 노동",cause-solution,0,0
+v3,2,122,"AI 제국: 권력, 자본, 노동",acad-pop,0.6,0.4
+v3,2,122,"AI 제국: 권력, 자본, 노동",narrative-explain,0,1
+v3,2,125,포식자들의 시간,indiv-struct,0.4,0.6
+v3,2,125,포식자들의 시간,neutral-critical,0.3,0.7
+v3,2,125,포식자들의 시간,now-future,0,0
+v3,2,125,포식자들의 시간,cause-solution,0,0
+v3,2,125,포식자들의 시간,acad-pop,0.6,0.4
+v3,2,125,포식자들의 시간,narrative-explain,0,1
+v3,2,91,자연은 성을 둘로 나누지 않는다,indiv-struct,0.5,0.5
+v3,2,91,자연은 성을 둘로 나누지 않는다,neutral-critical,0.3,0.7
+v3,2,91,자연은 성을 둘로 나누지 않는다,now-future,0,0
+v3,2,91,자연은 성을 둘로 나누지 않는다,cause-solution,0,0
+v3,2,91,자연은 성을 둘로 나누지 않는다,acad-pop,0.5,0.5
+v3,2,91,자연은 성을 둘로 나누지 않는다,narrative-explain,0,1
+v3,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,indiv-struct,0.5,0.5
+v3,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,neutral-critical,0.3,0.7
+v3,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,now-future,0.8,0.2
+v3,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,cause-solution,0.4,0.6
+v3,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,acad-pop,0.6,0.4
+v3,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,narrative-explain,0.3,0.7
+v3,2,7,나의 친구들,indiv-struct,0.8,0.2
+v3,2,7,나의 친구들,neutral-critical,0.5,0.5
+v3,2,7,나의 친구들,now-future,0,0
+v3,2,7,나의 친구들,cause-solution,0,0
+v3,2,7,나의 친구들,acad-pop,0,1
+v3,2,7,나의 친구들,narrative-explain,0.7,0.3
+v3,2,171,88번 버스의 기적,indiv-struct,0.9,0.1
+v3,2,171,88번 버스의 기적,neutral-critical,0.5,0.5
+v3,2,171,88번 버스의 기적,now-future,0,0
+v3,2,171,88번 버스의 기적,cause-solution,0,0
+v3,2,171,88번 버스의 기적,acad-pop,0,1
+v3,2,171,88번 버스의 기적,narrative-explain,0.8,0.2
+v3,2,176,공룡의 이동 경로 : 김화진 소설,indiv-struct,0.7,0.3
+v3,2,176,공룡의 이동 경로 : 김화진 소설,neutral-critical,0.5,0.5
+v3,2,176,공룡의 이동 경로 : 김화진 소설,now-future,0,0
+v3,2,176,공룡의 이동 경로 : 김화진 소설,cause-solution,0,0
+v3,2,176,공룡의 이동 경로 : 김화진 소설,acad-pop,0,0
+v3,2,176,공룡의 이동 경로 : 김화진 소설,narrative-explain,0.8,0.2
+v3,2,213,공감사회를 위한 담론들,indiv-struct,0.6,0.4
+v3,2,213,공감사회를 위한 담론들,neutral-critical,0.4,0.6
+v3,2,213,공감사회를 위한 담론들,now-future,0.5,0.5
+v3,2,213,공감사회를 위한 담론들,cause-solution,0.3,0.7
+v3,2,213,공감사회를 위한 담론들,acad-pop,0.4,0.6
+v3,2,213,공감사회를 위한 담론들,narrative-explain,0.3,0.7
+v3,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,indiv-struct,0.5,0.5
+v3,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,neutral-critical,0.4,0.6
+v3,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,now-future,0,0
+v3,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,cause-solution,0,0
+v3,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,acad-pop,0.7,0.3
+v3,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,narrative-explain,0.2,0.8
+v3,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,indiv-struct,0.6,0.4
+v3,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,neutral-critical,0.4,0.6
+v3,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,now-future,0.3,0.7
+v3,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,cause-solution,0.4,0.6
+v3,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,acad-pop,0.5,0.5
+v3,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,narrative-explain,0.2,0.8
+v3,2,21,교육은 유전을 이길 수 있는가,indiv-struct,0.4,0.6
+v3,2,21,교육은 유전을 이길 수 있는가,neutral-critical,0.5,0.5
+v3,2,21,교육은 유전을 이길 수 있는가,now-future,0.5,0.5
+v3,2,21,교육은 유전을 이길 수 있는가,cause-solution,0.4,0.6
+v3,2,21,교육은 유전을 이길 수 있는가,acad-pop,0.7,0.3
+v3,2,21,교육은 유전을 이길 수 있는가,narrative-explain,0,1
+v3,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,indiv-struct,0.5,0.5
+v3,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,neutral-critical,0,0
+v3,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,now-future,0,0
+v3,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,cause-solution,0,0
+v3,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,acad-pop,0,1
+v3,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,narrative-explain,0.3,0.7
+v3,3,5,슬픈 살인,indiv-struct,0.7,0.3
+v3,3,5,슬픈 살인,neutral-critical,0.4,0.6
+v3,3,5,슬픈 살인,now-future,0.6,0.4
+v3,3,5,슬픈 살인,cause-solution,0.5,0.5
+v3,3,5,슬픈 살인,acad-pop,0.3,0.7
+v3,3,5,슬픈 살인,narrative-explain,0,0.9
+v3,3,160,필연적 혼자의 시대,indiv-struct,0.6,0.4
+v3,3,160,필연적 혼자의 시대,neutral-critical,0.5,0.5
+v3,3,160,필연적 혼자의 시대,now-future,0,0
+v3,3,160,필연적 혼자의 시대,cause-solution,0,0
+v3,3,160,필연적 혼자의 시대,acad-pop,0.4,0.6
+v3,3,160,필연적 혼자의 시대,narrative-explain,0,0.9
+v3,3,54,마리아 지뷜라 메리안,indiv-struct,0.5,0.5
+v3,3,54,마리아 지뷜라 메리안,neutral-critical,0.4,0.6
+v3,3,54,마리아 지뷜라 메리안,now-future,0,0
+v3,3,54,마리아 지뷜라 메리안,cause-solution,0,0
+v3,3,54,마리아 지뷜라 메리안,acad-pop,0.6,0.4
+v3,3,54,마리아 지뷜라 메리안,narrative-explain,0,0.9
+v3,3,122,"AI 제국: 권력, 자본, 노동",indiv-struct,0.3,0.7
+v3,3,122,"AI 제국: 권력, 자본, 노동",neutral-critical,0.2,0.8
+v3,3,122,"AI 제국: 권력, 자본, 노동",now-future,0,0
+v3,3,122,"AI 제국: 권력, 자본, 노동",cause-solution,0,0
+v3,3,122,"AI 제국: 권력, 자본, 노동",acad-pop,0.8,0.2
+v3,3,122,"AI 제국: 권력, 자본, 노동",narrative-explain,0,0.9
+v3,3,125,포식자들의 시간,indiv-struct,0.3,0.7
+v3,3,125,포식자들의 시간,neutral-critical,0.2,0.8
+v3,3,125,포식자들의 시간,now-future,0,0
+v3,3,125,포식자들의 시간,cause-solution,0,0
+v3,3,125,포식자들의 시간,acad-pop,0.8,0.2
+v3,3,125,포식자들의 시간,narrative-explain,0,0.9
+v3,3,91,자연은 성을 둘로 나누지 않는다,indiv-struct,0.5,0.5
+v3,3,91,자연은 성을 둘로 나누지 않는다,neutral-critical,0.3,0.7
+v3,3,91,자연은 성을 둘로 나누지 않는다,now-future,0,0
+v3,3,91,자연은 성을 둘로 나누지 않는다,cause-solution,0,0
+v3,3,91,자연은 성을 둘로 나누지 않는다,acad-pop,0.4,0.6
+v3,3,91,자연은 성을 둘로 나누지 않는다,narrative-explain,0,0.9
+v3,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,indiv-struct,0.5,0.5
+v3,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,neutral-critical,0.3,0.7
+v3,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,now-future,0.8,0.2
+v3,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,cause-solution,0.4,0.6
+v3,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,acad-pop,0.6,0.4
+v3,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,narrative-explain,0.3,0.7
+v3,3,7,나의 친구들,indiv-struct,0.8,0.2
+v3,3,7,나의 친구들,neutral-critical,0.5,0.5
+v3,3,7,나의 친구들,now-future,0,0
+v3,3,7,나의 친구들,cause-solution,0,0
+v3,3,7,나의 친구들,acad-pop,0,1
+v3,3,7,나의 친구들,narrative-explain,0.9,0.1
+v3,3,171,88번 버스의 기적,indiv-struct,0.9,0.1
+v3,3,171,88번 버스의 기적,neutral-critical,0.5,0.5
+v3,3,171,88번 버스의 기적,now-future,0,0
+v3,3,171,88번 버스의 기적,cause-solution,0,0
+v3,3,171,88번 버스의 기적,acad-pop,0,1
+v3,3,171,88번 버스의 기적,narrative-explain,0.9,0.1
+v3,3,176,공룡의 이동 경로 : 김화진 소설,indiv-struct,0.7,0.3
+v3,3,176,공룡의 이동 경로 : 김화진 소설,neutral-critical,0.5,0.5
+v3,3,176,공룡의 이동 경로 : 김화진 소설,now-future,0,0
+v3,3,176,공룡의 이동 경로 : 김화진 소설,cause-solution,0,0
+v3,3,176,공룡의 이동 경로 : 김화진 소설,acad-pop,0,0
+v3,3,176,공룡의 이동 경로 : 김화진 소설,narrative-explain,0.8,0.2
+v3,3,213,공감사회를 위한 담론들,indiv-struct,0.6,0.4
+v3,3,213,공감사회를 위한 담론들,neutral-critical,0.4,0.6
+v3,3,213,공감사회를 위한 담론들,now-future,0.5,0.5
+v3,3,213,공감사회를 위한 담론들,cause-solution,0.3,0.7
+v3,3,213,공감사회를 위한 담론들,acad-pop,0.4,0.6
+v3,3,213,공감사회를 위한 담론들,narrative-explain,0.3,0.7
+v3,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,indiv-struct,0.5,0.5
+v3,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,neutral-critical,0.4,0.6
+v3,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,now-future,0,0
+v3,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,cause-solution,0,0
+v3,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,acad-pop,0.7,0.3
+v3,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,narrative-explain,0.2,0.8
+v3,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,indiv-struct,0.6,0.4
+v3,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,neutral-critical,0.4,0.6
+v3,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,now-future,0.3,0.7
+v3,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,cause-solution,0.4,0.6
+v3,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,acad-pop,0.5,0.5
+v3,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,narrative-explain,0.2,0.8
+v3,3,21,교육은 유전을 이길 수 있는가,indiv-struct,0.4,0.6
+v3,3,21,교육은 유전을 이길 수 있는가,neutral-critical,0.5,0.5
+v3,3,21,교육은 유전을 이길 수 있는가,now-future,0.5,0.5
+v3,3,21,교육은 유전을 이길 수 있는가,cause-solution,0.4,0.6
+v3,3,21,교육은 유전을 이길 수 있는가,acad-pop,0.7,0.3
+v3,3,21,교육은 유전을 이길 수 있는가,narrative-explain,0,0.9
+v3,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,indiv-struct,0.4,0.6
+v3,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,neutral-critical,0.5,0.5
+v3,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,now-future,0,0
+v3,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,cause-solution,0,0
+v3,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,acad-pop,0.3,0.7
+v3,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,narrative-explain,0,0.9
+v4a,1,5,슬픈 살인,indiv-struct,0.7,0.4
+v4a,1,5,슬픈 살인,neutral-critical,0,0
+v4a,1,5,슬픈 살인,now-future,0.8,0.2
+v4a,1,5,슬픈 살인,cause-solution,0.4,0.6
+v4a,1,5,슬픈 살인,acad-pop,0.3,0.7
+v4a,1,5,슬픈 살인,narrative-explain,0,0
+v4a,1,160,필연적 혼자의 시대,indiv-struct,0.6,0.4
+v4a,1,160,필연적 혼자의 시대,neutral-critical,0,0
+v4a,1,160,필연적 혼자의 시대,now-future,0,0
+v4a,1,160,필연적 혼자의 시대,cause-solution,0,0
+v4a,1,160,필연적 혼자의 시대,acad-pop,0.5,0.5
+v4a,1,160,필연적 혼자의 시대,narrative-explain,0,0
+v4a,1,54,마리아 지뷜라 메리안,indiv-struct,0.4,0.6
+v4a,1,54,마리아 지뷜라 메리안,neutral-critical,0,0
+v4a,1,54,마리아 지뷜라 메리안,now-future,0,0
+v4a,1,54,마리아 지뷜라 메리안,cause-solution,0,0
+v4a,1,54,마리아 지뷜라 메리안,acad-pop,0.7,0.3
+v4a,1,54,마리아 지뷜라 메리안,narrative-explain,0,0
+v4a,1,122,"AI 제국: 권력, 자본, 노동",indiv-struct,0.4,0.6
+v4a,1,122,"AI 제국: 권력, 자본, 노동",neutral-critical,0,0
+v4a,1,122,"AI 제국: 권력, 자본, 노동",now-future,0,0
+v4a,1,122,"AI 제국: 권력, 자본, 노동",cause-solution,0,0
+v4a,1,122,"AI 제국: 권력, 자본, 노동",acad-pop,0.6,0.4
+v4a,1,122,"AI 제국: 권력, 자본, 노동",narrative-explain,0,0
+v4a,1,125,포식자들의 시간,indiv-struct,0.4,0.6
+v4a,1,125,포식자들의 시간,neutral-critical,0,0
+v4a,1,125,포식자들의 시간,now-future,0,0
+v4a,1,125,포식자들의 시간,cause-solution,0,0
+v4a,1,125,포식자들의 시간,acad-pop,0.6,0.4
+v4a,1,125,포식자들의 시간,narrative-explain,0,0
+v4a,1,91,자연은 성을 둘로 나누지 않는다,indiv-struct,0.5,0.5
+v4a,1,91,자연은 성을 둘로 나누지 않는다,neutral-critical,0,0
+v4a,1,91,자연은 성을 둘로 나누지 않는다,now-future,0,0
+v4a,1,91,자연은 성을 둘로 나누지 않는다,cause-solution,0,0
+v4a,1,91,자연은 성을 둘로 나누지 않는다,acad-pop,0.5,0.5
+v4a,1,91,자연은 성을 둘로 나누지 않는다,narrative-explain,0,0
+v4a,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,indiv-struct,0.5,0.5
+v4a,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,neutral-critical,0.3,0.7
+v4a,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,now-future,0.8,0.2
+v4a,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,cause-solution,0.4,0.6
+v4a,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,acad-pop,0.4,0.6
+v4a,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,narrative-explain,0.3,0.7
+v4a,1,7,나의 친구들,indiv-struct,0.8,0.3
+v4a,1,7,나의 친구들,neutral-critical,0,0
+v4a,1,7,나의 친구들,now-future,0,0
+v4a,1,7,나의 친구들,cause-solution,0,0
+v4a,1,7,나의 친구들,acad-pop,0,0
+v4a,1,7,나의 친구들,narrative-explain,0.9,0.1
+v4a,1,171,88번 버스의 기적,indiv-struct,0.8,0.3
+v4a,1,171,88번 버스의 기적,neutral-critical,0,0
+v4a,1,171,88번 버스의 기적,now-future,0,0
+v4a,1,171,88번 버스의 기적,cause-solution,0,0
+v4a,1,171,88번 버스의 기적,acad-pop,0,0
+v4a,1,171,88번 버스의 기적,narrative-explain,0.9,0.1
+v4a,1,176,공룡의 이동 경로 : 김화진 소설,indiv-struct,0.8,0.2
+v4a,1,176,공룡의 이동 경로 : 김화진 소설,neutral-critical,0,0
+v4a,1,176,공룡의 이동 경로 : 김화진 소설,now-future,0,0
+v4a,1,176,공룡의 이동 경로 : 김화진 소설,cause-solution,0,0
+v4a,1,176,공룡의 이동 경로 : 김화진 소설,acad-pop,0,0
+v4a,1,176,공룡의 이동 경로 : 김화진 소설,narrative-explain,0.9,0.1
+v4a,1,213,공감사회를 위한 담론들,indiv-struct,0.6,0.4
+v4a,1,213,공감사회를 위한 담론들,neutral-critical,0.4,0.6
+v4a,1,213,공감사회를 위한 담론들,now-future,0.5,0.5
+v4a,1,213,공감사회를 위한 담론들,cause-solution,0.3,0.7
+v4a,1,213,공감사회를 위한 담론들,acad-pop,0.5,0.5
+v4a,1,213,공감사회를 위한 담론들,narrative-explain,0.4,0.6
+v4a,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,indiv-struct,0.5,0.5
+v4a,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,neutral-critical,0.4,0.6
+v4a,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,now-future,0,0
+v4a,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,cause-solution,0,0
+v4a,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,acad-pop,0.3,0.7
+v4a,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,narrative-explain,0.2,0.8
+v4a,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,indiv-struct,0.4,0.6
+v4a,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,neutral-critical,0.5,0.5
+v4a,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,now-future,0.6,0.4
+v4a,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,cause-solution,0.3,0.7
+v4a,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,acad-pop,0.5,0.5
+v4a,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,narrative-explain,0.2,0.8
+v4a,1,21,교육은 유전을 이길 수 있는가,indiv-struct,0.5,0.5
+v4a,1,21,교육은 유전을 이길 수 있는가,neutral-critical,0,0
+v4a,1,21,교육은 유전을 이길 수 있는가,now-future,0.7,0.3
+v4a,1,21,교육은 유전을 이길 수 있는가,cause-solution,0.4,0.6
+v4a,1,21,교육은 유전을 이길 수 있는가,acad-pop,0.6,0.4
+v4a,1,21,교육은 유전을 이길 수 있는가,narrative-explain,0,0
+v4a,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,indiv-struct,0.5,0.5
+v4a,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,neutral-critical,0,0
+v4a,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,now-future,0.8,0.2
+v4a,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,cause-solution,0,0
+v4a,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,acad-pop,0.4,0.6
+v4a,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,narrative-explain,0,0
+v4a,2,5,슬픈 살인,indiv-struct,0.7,0.4
+v4a,2,5,슬픈 살인,neutral-critical,0,0
+v4a,2,5,슬픈 살인,now-future,0.8,0.2
+v4a,2,5,슬픈 살인,cause-solution,0.4,0.6
+v4a,2,5,슬픈 살인,acad-pop,0.3,0.7
+v4a,2,5,슬픈 살인,narrative-explain,0,0
+v4a,2,160,필연적 혼자의 시대,indiv-struct,0.6,0.4
+v4a,2,160,필연적 혼자의 시대,neutral-critical,0,0
+v4a,2,160,필연적 혼자의 시대,now-future,0.8,0.2
+v4a,2,160,필연적 혼자의 시대,cause-solution,0.4,0.6
+v4a,2,160,필연적 혼자의 시대,acad-pop,0.5,0.5
+v4a,2,160,필연적 혼자의 시대,narrative-explain,0,0
+v4a,2,54,마리아 지뷜라 메리안,indiv-struct,0.6,0.4
+v4a,2,54,마리아 지뷜라 메리안,neutral-critical,0,0
+v4a,2,54,마리아 지뷜라 메리안,now-future,0,0
+v4a,2,54,마리아 지뷜라 메리안,cause-solution,0,0
+v4a,2,54,마리아 지뷜라 메리안,acad-pop,0.7,0.3
+v4a,2,54,마리아 지뷜라 메리안,narrative-explain,0,0
+v4a,2,122,"AI 제국: 권력, 자본, 노동",indiv-struct,0.4,0.6
+v4a,2,122,"AI 제국: 권력, 자본, 노동",neutral-critical,0,0
+v4a,2,122,"AI 제국: 권력, 자본, 노동",now-future,0,0
+v4a,2,122,"AI 제국: 권력, 자본, 노동",cause-solution,0,0
+v4a,2,122,"AI 제국: 권력, 자본, 노동",acad-pop,0.5,0.5
+v4a,2,122,"AI 제국: 권력, 자본, 노동",narrative-explain,0,0
+v4a,2,125,포식자들의 시간,indiv-struct,0.4,0.6
+v4a,2,125,포식자들의 시간,neutral-critical,0,0
+v4a,2,125,포식자들의 시간,now-future,0,0
+v4a,2,125,포식자들의 시간,cause-solution,0,0
+v4a,2,125,포식자들의 시간,acad-pop,0.5,0.5
+v4a,2,125,포식자들의 시간,narrative-explain,0,0
+v4a,2,91,자연은 성을 둘로 나누지 않는다,indiv-struct,0.5,0.5
+v4a,2,91,자연은 성을 둘로 나누지 않는다,neutral-critical,0,0
+v4a,2,91,자연은 성을 둘로 나누지 않는다,now-future,0,0
+v4a,2,91,자연은 성을 둘로 나누지 않는다,cause-solution,0,0
+v4a,2,91,자연은 성을 둘로 나누지 않는다,acad-pop,0.4,0.6
+v4a,2,91,자연은 성을 둘로 나누지 않는다,narrative-explain,0,0
+v4a,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,indiv-struct,0.5,0.5
+v4a,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,neutral-critical,0.4,0.6
+v4a,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,now-future,0.8,0.2
+v4a,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,cause-solution,0.5,0.5
+v4a,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,acad-pop,0.3,0.7
+v4a,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,narrative-explain,0.3,0.7
+v4a,2,7,나의 친구들,indiv-struct,0.8,0.2
+v4a,2,7,나의 친구들,neutral-critical,0,0
+v4a,2,7,나의 친구들,now-future,0,0
+v4a,2,7,나의 친구들,cause-solution,0,0
+v4a,2,7,나의 친구들,acad-pop,0,0
+v4a,2,7,나의 친구들,narrative-explain,0.9,0.1
+v4a,2,171,88번 버스의 기적,indiv-struct,0.8,0.2
+v4a,2,171,88번 버스의 기적,neutral-critical,0,0
+v4a,2,171,88번 버스의 기적,now-future,0,0
+v4a,2,171,88번 버스의 기적,cause-solution,0,0
+v4a,2,171,88번 버스의 기적,acad-pop,0,0
+v4a,2,171,88번 버스의 기적,narrative-explain,0.9,0.1
+v4a,2,176,공룡의 이동 경로 : 김화진 소설,indiv-struct,0.8,0.2
+v4a,2,176,공룡의 이동 경로 : 김화진 소설,neutral-critical,0,0
+v4a,2,176,공룡의 이동 경로 : 김화진 소설,now-future,0,0
+v4a,2,176,공룡의 이동 경로 : 김화진 소설,cause-solution,0,0
+v4a,2,176,공룡의 이동 경로 : 김화진 소설,acad-pop,0,0
+v4a,2,176,공룡의 이동 경로 : 김화진 소설,narrative-explain,0.9,0.1
+v4a,2,213,공감사회를 위한 담론들,indiv-struct,0.6,0.4
+v4a,2,213,공감사회를 위한 담론들,neutral-critical,0.5,0.5
+v4a,2,213,공감사회를 위한 담론들,now-future,0.5,0.5
+v4a,2,213,공감사회를 위한 담론들,cause-solution,0.4,0.6
+v4a,2,213,공감사회를 위한 담론들,acad-pop,0.4,0.6
+v4a,2,213,공감사회를 위한 담론들,narrative-explain,0.3,0.7
+v4a,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,indiv-struct,0.5,0.5
+v4a,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,neutral-critical,0.4,0.6
+v4a,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,now-future,0,0
+v4a,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,cause-solution,0,0
+v4a,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,acad-pop,0.3,0.7
+v4a,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,narrative-explain,0.2,0.8
+v4a,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,indiv-struct,0.4,0.6
+v4a,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,neutral-critical,0.5,0.5
+v4a,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,now-future,0.6,0.4
+v4a,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,cause-solution,0.3,0.7
+v4a,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,acad-pop,0.4,0.6
+v4a,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,narrative-explain,0.2,0.8
+v4a,2,21,교육은 유전을 이길 수 있는가,indiv-struct,0.5,0.5
+v4a,2,21,교육은 유전을 이길 수 있는가,neutral-critical,0,0
+v4a,2,21,교육은 유전을 이길 수 있는가,now-future,0.7,0.3
+v4a,2,21,교육은 유전을 이길 수 있는가,cause-solution,0.4,0.6
+v4a,2,21,교육은 유전을 이길 수 있는가,acad-pop,0.6,0.4
+v4a,2,21,교육은 유전을 이길 수 있는가,narrative-explain,0,0
+v4a,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,indiv-struct,0.5,0.5
+v4a,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,neutral-critical,0,0
+v4a,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,now-future,0,0
+v4a,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,cause-solution,0,0
+v4a,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,acad-pop,0.4,0.6
+v4a,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,narrative-explain,0,0
+v4a,3,5,슬픈 살인,indiv-struct,0.7,0.4
+v4a,3,5,슬픈 살인,neutral-critical,0,0
+v4a,3,5,슬픈 살인,now-future,0.8,0.2
+v4a,3,5,슬픈 살인,cause-solution,0.4,0.6
+v4a,3,5,슬픈 살인,acad-pop,0.3,0.7
+v4a,3,5,슬픈 살인,narrative-explain,0,0
+v4a,3,160,필연적 혼자의 시대,indiv-struct,0.6,0.4
+v4a,3,160,필연적 혼자의 시대,neutral-critical,0,0
+v4a,3,160,필연적 혼자의 시대,now-future,0,0
+v4a,3,160,필연적 혼자의 시대,cause-solution,0,0
+v4a,3,160,필연적 혼자의 시대,acad-pop,0.4,0.6
+v4a,3,160,필연적 혼자의 시대,narrative-explain,0,0
+v4a,3,54,마리아 지뷜라 메리안,indiv-struct,0.5,0.5
+v4a,3,54,마리아 지뷜라 메리안,neutral-critical,0,0
+v4a,3,54,마리아 지뷜라 메리안,now-future,0,0
+v4a,3,54,마리아 지뷜라 메리안,cause-solution,0,0
+v4a,3,54,마리아 지뷜라 메리안,acad-pop,0.7,0.3
+v4a,3,54,마리아 지뷜라 메리안,narrative-explain,0,0
+v4a,3,122,"AI 제국: 권력, 자본, 노동",indiv-struct,0.4,0.6
+v4a,3,122,"AI 제국: 권력, 자본, 노동",neutral-critical,0,0
+v4a,3,122,"AI 제국: 권력, 자본, 노동",now-future,0,0
+v4a,3,122,"AI 제국: 권력, 자본, 노동",cause-solution,0,0
+v4a,3,122,"AI 제국: 권력, 자본, 노동",acad-pop,0.5,0.5
+v4a,3,122,"AI 제국: 권력, 자본, 노동",narrative-explain,0,0
+v4a,3,125,포식자들의 시간,indiv-struct,0.4,0.6
+v4a,3,125,포식자들의 시간,neutral-critical,0,0
+v4a,3,125,포식자들의 시간,now-future,0,0
+v4a,3,125,포식자들의 시간,cause-solution,0,0
+v4a,3,125,포식자들의 시간,acad-pop,0.5,0.5
+v4a,3,125,포식자들의 시간,narrative-explain,0,0
+v4a,3,91,자연은 성을 둘로 나누지 않는다,indiv-struct,0.5,0.5
+v4a,3,91,자연은 성을 둘로 나누지 않는다,neutral-critical,0,0
+v4a,3,91,자연은 성을 둘로 나누지 않는다,now-future,0,0
+v4a,3,91,자연은 성을 둘로 나누지 않는다,cause-solution,0,0
+v4a,3,91,자연은 성을 둘로 나누지 않는다,acad-pop,0.6,0.4
+v4a,3,91,자연은 성을 둘로 나누지 않는다,narrative-explain,0,0
+v4a,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,indiv-struct,0.5,0.5
+v4a,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,neutral-critical,0.4,0.6
+v4a,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,now-future,0.8,0.2
+v4a,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,cause-solution,0.4,0.6
+v4a,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,acad-pop,0.3,0.7
+v4a,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,narrative-explain,0.3,0.7
+v4a,3,7,나의 친구들,indiv-struct,0.9,0.2
+v4a,3,7,나의 친구들,neutral-critical,0,0
+v4a,3,7,나의 친구들,now-future,0,0
+v4a,3,7,나의 친구들,cause-solution,0,0
+v4a,3,7,나의 친구들,acad-pop,0,0
+v4a,3,7,나의 친구들,narrative-explain,0.8,0.2
+v4a,3,171,88번 버스의 기적,indiv-struct,0.9,0.1
+v4a,3,171,88번 버스의 기적,neutral-critical,0,0
+v4a,3,171,88번 버스의 기적,now-future,0,0
+v4a,3,171,88번 버스의 기적,cause-solution,0,0
+v4a,3,171,88번 버스의 기적,acad-pop,0,0
+v4a,3,171,88번 버스의 기적,narrative-explain,0.8,0.2
+v4a,3,176,공룡의 이동 경로 : 김화진 소설,indiv-struct,0.7,0.3
+v4a,3,176,공룡의 이동 경로 : 김화진 소설,neutral-critical,0,0
+v4a,3,176,공룡의 이동 경로 : 김화진 소설,now-future,0,0
+v4a,3,176,공룡의 이동 경로 : 김화진 소설,cause-solution,0,0
+v4a,3,176,공룡의 이동 경로 : 김화진 소설,acad-pop,0,0
+v4a,3,176,공룡의 이동 경로 : 김화진 소설,narrative-explain,0.8,0.2
+v4a,3,213,공감사회를 위한 담론들,indiv-struct,0.6,0.4
+v4a,3,213,공감사회를 위한 담론들,neutral-critical,0.5,0.5
+v4a,3,213,공감사회를 위한 담론들,now-future,0.5,0.5
+v4a,3,213,공감사회를 위한 담론들,cause-solution,0.4,0.6
+v4a,3,213,공감사회를 위한 담론들,acad-pop,0.4,0.6
+v4a,3,213,공감사회를 위한 담론들,narrative-explain,0.3,0.7
+v4a,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,indiv-struct,0.5,0.5
+v4a,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,neutral-critical,0,0
+v4a,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,now-future,0,0
+v4a,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,cause-solution,0,0
+v4a,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,acad-pop,0.3,0.7
+v4a,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,narrative-explain,0.2,0.8
+v4a,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,indiv-struct,0.4,0.6
+v4a,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,neutral-critical,0.5,0.5
+v4a,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,now-future,0.6,0.4
+v4a,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,cause-solution,0.3,0.7
+v4a,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,acad-pop,0.5,0.5
+v4a,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,narrative-explain,0.2,0.8
+v4a,3,21,교육은 유전을 이길 수 있는가,indiv-struct,0.4,0.6
+v4a,3,21,교육은 유전을 이길 수 있는가,neutral-critical,0,0
+v4a,3,21,교육은 유전을 이길 수 있는가,now-future,0.7,0.3
+v4a,3,21,교육은 유전을 이길 수 있는가,cause-solution,0.5,0.5
+v4a,3,21,교육은 유전을 이길 수 있는가,acad-pop,0.6,0.4
+v4a,3,21,교육은 유전을 이길 수 있는가,narrative-explain,0,0
+v4a,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,indiv-struct,0.5,0.5
+v4a,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,neutral-critical,0,0
+v4a,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,now-future,0,0
+v4a,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,cause-solution,0,0
+v4a,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,acad-pop,0.4,0.6
+v4a,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,narrative-explain,0,0
+v4b,1,5,슬픈 살인,indiv-struct,0.7,0.4
+v4b,1,5,슬픈 살인,neutral-critical,0,0
+v4b,1,5,슬픈 살인,now-future,0.8,0.2
+v4b,1,5,슬픈 살인,cause-solution,0.4,0.6
+v4b,1,5,슬픈 살인,acad-pop,0.3,0.7
+v4b,1,5,슬픈 살인,narrative-explain,0.4,0.6
+v4b,1,160,필연적 혼자의 시대,indiv-struct,0.6,0.4
+v4b,1,160,필연적 혼자의 시대,neutral-critical,0,0
+v4b,1,160,필연적 혼자의 시대,now-future,0.8,0.2
+v4b,1,160,필연적 혼자의 시대,cause-solution,0,0
+v4b,1,160,필연적 혼자의 시대,acad-pop,0.4,0.6
+v4b,1,160,필연적 혼자의 시대,narrative-explain,0,0
+v4b,1,54,마리아 지뷜라 메리안,indiv-struct,0.5,0.5
+v4b,1,54,마리아 지뷜라 메리안,neutral-critical,0,0
+v4b,1,54,마리아 지뷜라 메리안,now-future,0,0
+v4b,1,54,마리아 지뷜라 메리안,cause-solution,0,0
+v4b,1,54,마리아 지뷜라 메리안,acad-pop,0.7,0.3
+v4b,1,54,마리아 지뷜라 메리안,narrative-explain,0,0
+v4b,1,122,"AI 제국: 권력, 자본, 노동",indiv-struct,0.4,0.6
+v4b,1,122,"AI 제국: 권력, 자본, 노동",neutral-critical,0,0
+v4b,1,122,"AI 제국: 권력, 자본, 노동",now-future,0,0
+v4b,1,122,"AI 제국: 권력, 자본, 노동",cause-solution,0,0
+v4b,1,122,"AI 제국: 권력, 자본, 노동",acad-pop,0.3,0.7
+v4b,1,122,"AI 제국: 권력, 자본, 노동",narrative-explain,0,0
+v4b,1,125,포식자들의 시간,indiv-struct,0.5,0.5
+v4b,1,125,포식자들의 시간,neutral-critical,0,0
+v4b,1,125,포식자들의 시간,now-future,0,0
+v4b,1,125,포식자들의 시간,cause-solution,0,0
+v4b,1,125,포식자들의 시간,acad-pop,0,0
+v4b,1,125,포식자들의 시간,narrative-explain,0,0
+v4b,1,91,자연은 성을 둘로 나누지 않는다,indiv-struct,0.3,0.7
+v4b,1,91,자연은 성을 둘로 나누지 않는다,neutral-critical,0,0
+v4b,1,91,자연은 성을 둘로 나누지 않는다,now-future,0,0
+v4b,1,91,자연은 성을 둘로 나누지 않는다,cause-solution,0,0
+v4b,1,91,자연은 성을 둘로 나누지 않는다,acad-pop,0,0
+v4b,1,91,자연은 성을 둘로 나누지 않는다,narrative-explain,0,0
+v4b,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,indiv-struct,0.4,0.6
+v4b,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,neutral-critical,0.3,0.7
+v4b,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,now-future,0.5,0.5
+v4b,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,cause-solution,0.4,0.6
+v4b,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,acad-pop,0.5,0.5
+v4b,1,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,narrative-explain,0.3,0.7
+v4b,1,7,나의 친구들,indiv-struct,0.8,0.2
+v4b,1,7,나의 친구들,neutral-critical,0,0
+v4b,1,7,나의 친구들,now-future,0,0
+v4b,1,7,나의 친구들,cause-solution,0,0
+v4b,1,7,나의 친구들,acad-pop,0,0
+v4b,1,7,나의 친구들,narrative-explain,0.9,0.1
+v4b,1,171,88번 버스의 기적,indiv-struct,0.8,0.2
+v4b,1,171,88번 버스의 기적,neutral-critical,0,0
+v4b,1,171,88번 버스의 기적,now-future,0,0
+v4b,1,171,88번 버스의 기적,cause-solution,0,0
+v4b,1,171,88번 버스의 기적,acad-pop,0,0
+v4b,1,171,88번 버스의 기적,narrative-explain,0.9,0.1
+v4b,1,176,공룡의 이동 경로 : 김화진 소설,indiv-struct,0.9,0.1
+v4b,1,176,공룡의 이동 경로 : 김화진 소설,neutral-critical,0,0
+v4b,1,176,공룡의 이동 경로 : 김화진 소설,now-future,0,0
+v4b,1,176,공룡의 이동 경로 : 김화진 소설,cause-solution,0,0
+v4b,1,176,공룡의 이동 경로 : 김화진 소설,acad-pop,0,0
+v4b,1,176,공룡의 이동 경로 : 김화진 소설,narrative-explain,0.8,0.2
+v4b,1,213,공감사회를 위한 담론들,indiv-struct,0.5,0.5
+v4b,1,213,공감사회를 위한 담론들,neutral-critical,0.4,0.6
+v4b,1,213,공감사회를 위한 담론들,now-future,0.5,0.5
+v4b,1,213,공감사회를 위한 담론들,cause-solution,0.3,0.7
+v4b,1,213,공감사회를 위한 담론들,acad-pop,0.4,0.6
+v4b,1,213,공감사회를 위한 담론들,narrative-explain,0.4,0.6
+v4b,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,indiv-struct,0.5,0.5
+v4b,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,neutral-critical,0.3,0.7
+v4b,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,now-future,0,0
+v4b,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,cause-solution,0.2,0.8
+v4b,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,acad-pop,0.3,0.7
+v4b,1,227,생각의 기술 : 바로 써먹는 논리학 사용법,narrative-explain,0.3,0.7
+v4b,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,indiv-struct,0.7,0.3
+v4b,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,neutral-critical,0.4,0.6
+v4b,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,now-future,0.6,0.4
+v4b,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,cause-solution,0.3,0.7
+v4b,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,acad-pop,0.4,0.6
+v4b,1,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,narrative-explain,0.2,0.8
+v4b,1,21,교육은 유전을 이길 수 있는가,indiv-struct,0.4,0.6
+v4b,1,21,교육은 유전을 이길 수 있는가,neutral-critical,0,0
+v4b,1,21,교육은 유전을 이길 수 있는가,now-future,0.8,0.2
+v4b,1,21,교육은 유전을 이길 수 있는가,cause-solution,0.5,0.5
+v4b,1,21,교육은 유전을 이길 수 있는가,acad-pop,0.6,0.4
+v4b,1,21,교육은 유전을 이길 수 있는가,narrative-explain,0,0
+v4b,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,indiv-struct,0.5,0.5
+v4b,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,neutral-critical,0,0
+v4b,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,now-future,0,0
+v4b,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,cause-solution,0,0
+v4b,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,acad-pop,0,0
+v4b,1,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,narrative-explain,0,0
+v4b,2,5,슬픈 살인,indiv-struct,0.7,0.4
+v4b,2,5,슬픈 살인,neutral-critical,0,0
+v4b,2,5,슬픈 살인,now-future,0.8,0.2
+v4b,2,5,슬픈 살인,cause-solution,0.4,0.6
+v4b,2,5,슬픈 살인,acad-pop,0.3,0.7
+v4b,2,5,슬픈 살인,narrative-explain,0.4,0.6
+v4b,2,160,필연적 혼자의 시대,indiv-struct,0.6,0.4
+v4b,2,160,필연적 혼자의 시대,neutral-critical,0,0
+v4b,2,160,필연적 혼자의 시대,now-future,0.8,0.2
+v4b,2,160,필연적 혼자의 시대,cause-solution,0,0
+v4b,2,160,필연적 혼자의 시대,acad-pop,0.5,0.5
+v4b,2,160,필연적 혼자의 시대,narrative-explain,0,0
+v4b,2,54,마리아 지뷜라 메리안,indiv-struct,0.5,0.5
+v4b,2,54,마리아 지뷜라 메리안,neutral-critical,0,0
+v4b,2,54,마리아 지뷜라 메리안,now-future,0,0
+v4b,2,54,마리아 지뷜라 메리안,cause-solution,0,0
+v4b,2,54,마리아 지뷜라 메리안,acad-pop,0.8,0.2
+v4b,2,54,마리아 지뷜라 메리안,narrative-explain,0.4,0.6
+v4b,2,122,"AI 제국: 권력, 자본, 노동",indiv-struct,0.5,0.5
+v4b,2,122,"AI 제국: 권력, 자본, 노동",neutral-critical,0,0
+v4b,2,122,"AI 제국: 권력, 자본, 노동",now-future,0,0
+v4b,2,122,"AI 제국: 권력, 자본, 노동",cause-solution,0,0
+v4b,2,122,"AI 제국: 권력, 자본, 노동",acad-pop,0.4,0.6
+v4b,2,122,"AI 제국: 권력, 자본, 노동",narrative-explain,0.3,0.7
+v4b,2,125,포식자들의 시간,indiv-struct,0.5,0.5
+v4b,2,125,포식자들의 시간,neutral-critical,0,0
+v4b,2,125,포식자들의 시간,now-future,0,0
+v4b,2,125,포식자들의 시간,cause-solution,0,0
+v4b,2,125,포식자들의 시간,acad-pop,0.4,0.6
+v4b,2,125,포식자들의 시간,narrative-explain,0.3,0.7
+v4b,2,91,자연은 성을 둘로 나누지 않는다,indiv-struct,0.4,0.6
+v4b,2,91,자연은 성을 둘로 나누지 않는다,neutral-critical,0,0
+v4b,2,91,자연은 성을 둘로 나누지 않는다,now-future,0,0
+v4b,2,91,자연은 성을 둘로 나누지 않는다,cause-solution,0,0
+v4b,2,91,자연은 성을 둘로 나누지 않는다,acad-pop,0,0
+v4b,2,91,자연은 성을 둘로 나누지 않는다,narrative-explain,0.3,0.7
+v4b,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,indiv-struct,0.4,0.6
+v4b,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,neutral-critical,0.3,0.7
+v4b,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,now-future,0.5,0.5
+v4b,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,cause-solution,0.4,0.6
+v4b,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,acad-pop,0.5,0.5
+v4b,2,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,narrative-explain,0.3,0.7
+v4b,2,7,나의 친구들,indiv-struct,0.8,0.2
+v4b,2,7,나의 친구들,neutral-critical,0,0
+v4b,2,7,나의 친구들,now-future,0,0
+v4b,2,7,나의 친구들,cause-solution,0,0
+v4b,2,7,나의 친구들,acad-pop,0,0
+v4b,2,7,나의 친구들,narrative-explain,0.9,0.1
+v4b,2,171,88번 버스의 기적,indiv-struct,0.8,0.2
+v4b,2,171,88번 버스의 기적,neutral-critical,0,0
+v4b,2,171,88번 버스의 기적,now-future,0,0
+v4b,2,171,88번 버스의 기적,cause-solution,0,0
+v4b,2,171,88번 버스의 기적,acad-pop,0,0
+v4b,2,171,88번 버스의 기적,narrative-explain,0.9,0.1
+v4b,2,176,공룡의 이동 경로 : 김화진 소설,indiv-struct,0.9,0.1
+v4b,2,176,공룡의 이동 경로 : 김화진 소설,neutral-critical,0,0
+v4b,2,176,공룡의 이동 경로 : 김화진 소설,now-future,0,0
+v4b,2,176,공룡의 이동 경로 : 김화진 소설,cause-solution,0,0
+v4b,2,176,공룡의 이동 경로 : 김화진 소설,acad-pop,0,0
+v4b,2,176,공룡의 이동 경로 : 김화진 소설,narrative-explain,0.8,0.2
+v4b,2,213,공감사회를 위한 담론들,indiv-struct,0.6,0.4
+v4b,2,213,공감사회를 위한 담론들,neutral-critical,0.4,0.6
+v4b,2,213,공감사회를 위한 담론들,now-future,0.5,0.5
+v4b,2,213,공감사회를 위한 담론들,cause-solution,0.3,0.7
+v4b,2,213,공감사회를 위한 담론들,acad-pop,0.5,0.5
+v4b,2,213,공감사회를 위한 담론들,narrative-explain,0.4,0.6
+v4b,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,indiv-struct,0.5,0.5
+v4b,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,neutral-critical,0,0
+v4b,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,now-future,0,0
+v4b,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,cause-solution,0,0
+v4b,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,acad-pop,0.3,0.7
+v4b,2,227,생각의 기술 : 바로 써먹는 논리학 사용법,narrative-explain,0.2,0.8
+v4b,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,indiv-struct,0.7,0.3
+v4b,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,neutral-critical,0.4,0.6
+v4b,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,now-future,0.6,0.4
+v4b,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,cause-solution,0.3,0.7
+v4b,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,acad-pop,0.4,0.6
+v4b,2,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,narrative-explain,0.2,0.8
+v4b,2,21,교육은 유전을 이길 수 있는가,indiv-struct,0.5,0.5
+v4b,2,21,교육은 유전을 이길 수 있는가,neutral-critical,0,0
+v4b,2,21,교육은 유전을 이길 수 있는가,now-future,0.8,0.2
+v4b,2,21,교육은 유전을 이길 수 있는가,cause-solution,0.4,0.6
+v4b,2,21,교육은 유전을 이길 수 있는가,acad-pop,0.6,0.4
+v4b,2,21,교육은 유전을 이길 수 있는가,narrative-explain,0.3,0.7
+v4b,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,indiv-struct,0.5,0.5
+v4b,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,neutral-critical,0,0
+v4b,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,now-future,0,0
+v4b,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,cause-solution,0,0
+v4b,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,acad-pop,0.3,0.7
+v4b,2,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,narrative-explain,0.4,0.6
+v4b,3,5,슬픈 살인,indiv-struct,0.7,0.4
+v4b,3,5,슬픈 살인,neutral-critical,0,0
+v4b,3,5,슬픈 살인,now-future,0.8,0.2
+v4b,3,5,슬픈 살인,cause-solution,0.4,0.6
+v4b,3,5,슬픈 살인,acad-pop,0.3,0.7
+v4b,3,5,슬픈 살인,narrative-explain,0.4,0.6
+v4b,3,160,필연적 혼자의 시대,indiv-struct,0.6,0.4
+v4b,3,160,필연적 혼자의 시대,neutral-critical,0,0
+v4b,3,160,필연적 혼자의 시대,now-future,0.8,0.2
+v4b,3,160,필연적 혼자의 시대,cause-solution,0,0
+v4b,3,160,필연적 혼자의 시대,acad-pop,0.5,0.5
+v4b,3,160,필연적 혼자의 시대,narrative-explain,0,0
+v4b,3,54,마리아 지뷜라 메리안,indiv-struct,0.4,0.6
+v4b,3,54,마리아 지뷜라 메리안,neutral-critical,0,0
+v4b,3,54,마리아 지뷜라 메리안,now-future,0,0
+v4b,3,54,마리아 지뷜라 메리안,cause-solution,0,0
+v4b,3,54,마리아 지뷜라 메리안,acad-pop,0.7,0.3
+v4b,3,54,마리아 지뷜라 메리안,narrative-explain,0.3,0.7
+v4b,3,122,"AI 제국: 권력, 자본, 노동",indiv-struct,0.4,0.6
+v4b,3,122,"AI 제국: 권력, 자본, 노동",neutral-critical,0,0
+v4b,3,122,"AI 제국: 권력, 자본, 노동",now-future,0,0
+v4b,3,122,"AI 제국: 권력, 자본, 노동",cause-solution,0,0
+v4b,3,122,"AI 제국: 권력, 자본, 노동",acad-pop,0.5,0.5
+v4b,3,122,"AI 제국: 권력, 자본, 노동",narrative-explain,0,0
+v4b,3,125,포식자들의 시간,indiv-struct,0.5,0.5
+v4b,3,125,포식자들의 시간,neutral-critical,0,0
+v4b,3,125,포식자들의 시간,now-future,0,0
+v4b,3,125,포식자들의 시간,cause-solution,0,0
+v4b,3,125,포식자들의 시간,acad-pop,0.4,0.6
+v4b,3,125,포식자들의 시간,narrative-explain,0,0
+v4b,3,91,자연은 성을 둘로 나누지 않는다,indiv-struct,0.5,0.5
+v4b,3,91,자연은 성을 둘로 나누지 않는다,neutral-critical,0,0
+v4b,3,91,자연은 성을 둘로 나누지 않는다,now-future,0,0
+v4b,3,91,자연은 성을 둘로 나누지 않는다,cause-solution,0,0
+v4b,3,91,자연은 성을 둘로 나누지 않는다,acad-pop,0,0
+v4b,3,91,자연은 성을 둘로 나누지 않는다,narrative-explain,0.4,0.6
+v4b,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,indiv-struct,0.4,0.6
+v4b,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,neutral-critical,0.3,0.7
+v4b,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,now-future,0.5,0.5
+v4b,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,cause-solution,0.4,0.6
+v4b,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,acad-pop,0.5,0.5
+v4b,3,191,미국이 만든 가난 : 가장 부유한 국가에 존재하는 빈곤의 진실,narrative-explain,0.3,0.7
+v4b,3,7,나의 친구들,indiv-struct,0.8,0.2
+v4b,3,7,나의 친구들,neutral-critical,0,0
+v4b,3,7,나의 친구들,now-future,0,0
+v4b,3,7,나의 친구들,cause-solution,0,0
+v4b,3,7,나의 친구들,acad-pop,0,0
+v4b,3,7,나의 친구들,narrative-explain,0.9,0.1
+v4b,3,171,88번 버스의 기적,indiv-struct,0.8,0.2
+v4b,3,171,88번 버스의 기적,neutral-critical,0,0
+v4b,3,171,88번 버스의 기적,now-future,0,0
+v4b,3,171,88번 버스의 기적,cause-solution,0,0
+v4b,3,171,88번 버스의 기적,acad-pop,0,0
+v4b,3,171,88번 버스의 기적,narrative-explain,0.9,0.1
+v4b,3,176,공룡의 이동 경로 : 김화진 소설,indiv-struct,0.9,0.1
+v4b,3,176,공룡의 이동 경로 : 김화진 소설,neutral-critical,0,0
+v4b,3,176,공룡의 이동 경로 : 김화진 소설,now-future,0,0
+v4b,3,176,공룡의 이동 경로 : 김화진 소설,cause-solution,0,0
+v4b,3,176,공룡의 이동 경로 : 김화진 소설,acad-pop,0,0
+v4b,3,176,공룡의 이동 경로 : 김화진 소설,narrative-explain,0.8,0.2
+v4b,3,213,공감사회를 위한 담론들,indiv-struct,0.5,0.5
+v4b,3,213,공감사회를 위한 담론들,neutral-critical,0.2,0.8
+v4b,3,213,공감사회를 위한 담론들,now-future,0,0
+v4b,3,213,공감사회를 위한 담론들,cause-solution,0,0
+v4b,3,213,공감사회를 위한 담론들,acad-pop,0.3,0.7
+v4b,3,213,공감사회를 위한 담론들,narrative-explain,0,0
+v4b,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,indiv-struct,0.4,0.6
+v4b,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,neutral-critical,0.5,0.5
+v4b,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,now-future,0,0
+v4b,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,cause-solution,0,0
+v4b,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,acad-pop,0.6,0.4
+v4b,3,227,생각의 기술 : 바로 써먹는 논리학 사용법,narrative-explain,0.3,0.7
+v4b,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,indiv-struct,0.7,0.3
+v4b,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,neutral-critical,0.4,0.6
+v4b,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,now-future,0.6,0.4
+v4b,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,cause-solution,0.3,0.7
+v4b,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,acad-pop,0.4,0.6
+v4b,3,175,과학에서 인문학을 만나다 : 챗GPT의 시대 인문학에서 답을 찾다,narrative-explain,0.2,0.8
+v4b,3,21,교육은 유전을 이길 수 있는가,indiv-struct,0.5,0.5
+v4b,3,21,교육은 유전을 이길 수 있는가,neutral-critical,0,0
+v4b,3,21,교육은 유전을 이길 수 있는가,now-future,0.8,0.2
+v4b,3,21,교육은 유전을 이길 수 있는가,cause-solution,0.4,0.6
+v4b,3,21,교육은 유전을 이길 수 있는가,acad-pop,0.6,0.4
+v4b,3,21,교육은 유전을 이길 수 있는가,narrative-explain,0,0
+v4b,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,indiv-struct,0.5,0.5
+v4b,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,neutral-critical,0,0
+v4b,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,now-future,0.8,0.2
+v4b,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,cause-solution,0,0
+v4b,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,acad-pop,0.3,0.7
+v4b,3,172,(일하는 당신을 위한) 최고의 수면법 : 아침이 두렵지 않은 직장인의 꿀잠 루틴,narrative-explain,0,0
