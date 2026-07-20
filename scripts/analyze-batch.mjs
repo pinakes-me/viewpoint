@@ -15,16 +15,22 @@ const OUT_PATH = path.join(ROOT, "data", "analyze_scores.csv");
 // 있어(2026-07-09 STEP A/B 진단), 같은 실수가 재발하지 않도록 이 스크립트도 두 곳에 동시 저장한다.
 const PUBLIC_OUT_PATH = path.join(ROOT, "public", "data", "analyze_scores.csv");
 
-// 실험 채점용 옵션 (M0, membership 품질 실험 전제 작업):
+// 실험 채점용 옵션 (M0/M3, membership 품질 실험 전제 작업):
 //   --ids 2,54,172  지정 book_id만 해시 캐시를 무시하고 강제 재채점.
 //                   나머지 책은 해시 일치 여부와 무관하게 기존 CSV의 캐시 점수를 그대로 사용.
 //   --out <경로>    결과를 지정 파일에만 기록. 기본 산출물(data/, public/data/)은 건드리지 않음.
-// 두 옵션을 함께 쓰면 라이브 데이터 무변경으로 실험 채점이 가능하다.
+//   --prompt v4a    채점 API에 promptVersion 전달 (기본 v3 = 현행 프롬프트).
+//                   CSV의 prompt_version 필드에는 실제 사용 버전이 기록됨(캐시 유지 행은
+//                   기존 CSV의 버전을 그대로 승계).
+// --ids/--out을 함께 쓰면 라이브 데이터 무변경으로 실험 채점이 가능하다.
 // 주의: 해시 공식(topicsHash)은 변경 금지 — 바꾸면 전체 캐시가 무효화되어 293권 재채점이 유발됨.
+const VALID_PROMPT_VERSIONS = ["v3", "v4a", "v4b"];
+
 function parseCliOptions() {
   const argv = process.argv.slice(2);
   let forceIds = null;
   let outOverride = null;
+  let promptVersion = PROMPT_VERSION; // 기본 "v3"
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--ids" && argv[i + 1]) {
       forceIds = new Set(
@@ -35,9 +41,17 @@ function parseCliOptions() {
       );
     } else if (argv[i] === "--out" && argv[i + 1]) {
       outOverride = path.resolve(argv[++i]);
+    } else if (argv[i] === "--prompt" && argv[i + 1]) {
+      promptVersion = argv[++i].trim();
+      if (!VALID_PROMPT_VERSIONS.includes(promptVersion)) {
+        console.error(
+          `❌ 알 수 없는 --prompt 값: ${promptVersion} (허용: ${VALID_PROMPT_VERSIONS.join(", ")})`
+        );
+        process.exit(1);
+      }
     }
   }
-  return { forceIds, outOverride };
+  return { forceIds, outOverride, promptVersion };
 }
 
 const AXES = [
@@ -113,7 +127,7 @@ function parseCsvLine(line) {
   return cells;
 }
 
-// 기존 CSV를 읽어 book_id → { topicsHash, scores } 캐시 맵 생성
+// 기존 CSV를 읽어 book_id → { topicsHash, scores, promptVersion } 캐시 맵 생성
 function loadExistingScores() {
   const cache = new Map();
   if (!fs.existsSync(OUT_PATH)) return cache;
@@ -140,18 +154,23 @@ function loadExistingScores() {
     cache.set(cells[idx("book_id")], {
       topicsHash: cells[idx("topics_hash")],
       scores,
+      promptVersion:
+        idx("prompt_version") !== -1
+          ? cells[idx("prompt_version")] || PROMPT_VERSION
+          : PROMPT_VERSION,
     });
   }
   return cache;
 }
 
-function toCsvRow(book, scores) {
+// version: 이 행의 점수를 만든 실제 프롬프트 버전 (캐시 유지 행은 기존 버전 승계)
+function toCsvRow(book, scores, version) {
   const cells = [book.id, book.title, book.source ?? ""];
   for (const axis of AXES) {
     const s = scores?.[axis.id] ?? { a: 0, b: 0 };
     cells.push(s.a ?? 0, s.b ?? 0);
   }
-  cells.push(PROMPT_VERSION);
+  cells.push(version ?? PROMPT_VERSION);
   cells.push(book.topics ?? "");
   cells.push(book.cover_url ?? "");
   cells.push(topicsHash(book));
@@ -177,7 +196,7 @@ async function fetchAllBooks(supabase) {
   for (let from = 0; ; from += PAGE_SIZE) {
     const { data, error } = await supabase
       .from("books")
-      .select("id, title, topics, source, cover_url")
+      .select("id, title, topics, source, cover_url, description")
       .order("id", { ascending: true })
       .range(from, from + PAGE_SIZE - 1);
 
@@ -229,7 +248,7 @@ async function main() {
   const skipped = allBooks.length - books.length;
   console.log(`🏷️ 태그 없음으로 제외: ${skipped}권`);
 
-  const { forceIds, outOverride } = parseCliOptions();
+  const { forceIds, outOverride, promptVersion } = parseCliOptions();
 
   if (forceIds) {
     const known = new Set(books.map((b) => String(b.id)));
@@ -244,6 +263,7 @@ async function main() {
 
   const cache = loadExistingScores();
   const scoresById = new Map();
+  const versionById = new Map(); // 행별 실제 사용 프롬프트 버전 (캐시 유지 행은 기존 버전 승계)
   const toScore = [];
 
   for (const book of books) {
@@ -255,10 +275,12 @@ async function main() {
         toScore.push(book);
       } else if (cached) {
         scoresById.set(key, cached.scores);
+        versionById.set(key, cached.promptVersion);
       }
       // 캐시에 없고 대상도 아닌 책은 결과에서 제외(기존 채점 실패 시 처리와 동일)
     } else if (cached && cached.topicsHash === topicsHash(book)) {
       scoresById.set(key, cached.scores);
+      versionById.set(key, cached.promptVersion);
     } else {
       toScore.push(book);
     }
@@ -276,6 +298,9 @@ async function main() {
   if (outOverride) {
     console.log(`📝 --out 모드: 결과는 ${outOverride}에만 기록 (라이브 데이터 무변경)`);
   }
+  if (promptVersion !== PROMPT_VERSION) {
+    console.log(`🧪 --prompt 모드: 채점 프롬프트 버전 ${promptVersion}`);
+  }
 
   const batches = [];
   for (let i = 0; i < toScore.length; i += BATCH_SIZE) {
@@ -292,10 +317,13 @@ async function main() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          promptVersion,
           books: batch.map((b) => ({
             id: b.id,
             title: b.title,
             topics: b.topics,
+            // v4b가 사용 (v3/v4a는 API가 무시)
+            description: b.description ?? "",
           })),
         }),
       });
@@ -304,6 +332,7 @@ async function main() {
       const json = await res.json();
       for (const r of json.results ?? []) {
         scoresById.set(String(r.id), r.scores);
+        versionById.set(String(r.id), promptVersion);
       }
       scoredCount += batch.length;
       console.log(`배치 ${i + 1}/${batches.length} 완료 (누적 ${scoredCount}권)`);
@@ -321,9 +350,10 @@ async function main() {
 
   const rows = [];
   for (const book of books) {
-    const scores = scoresById.get(String(book.id));
+    const key = String(book.id);
+    const scores = scoresById.get(key);
     if (!scores) continue; // 채점 실패한 배치의 책은 제외
-    rows.push(toCsvRow(book, scores));
+    rows.push(toCsvRow(book, scores, versionById.get(key)));
   }
 
   const csvContent = [CSV_HEADER, ...rows].join("\n") + "\n";

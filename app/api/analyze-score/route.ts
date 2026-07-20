@@ -8,14 +8,19 @@ type InputBook = {
   id: string;
   title: string;
   topics: string;
+  description: string; // v4b에서만 프롬프트 입력에 사용 (v3/v4a는 무시)
 };
 
 type AxisScore = { a: number; b: number };
 type BookScores = Record<AnalyzeAxisId, AxisScore>;
 
+// M3 실험용 프롬프트 버전 스위치. 기본값 v3 = 현행 프롬프트 그대로 (라이브 안전장치).
+const PROMPT_VERSIONS = ["v3", "v4a", "v4b"] as const;
+type PromptVersion = (typeof PROMPT_VERSIONS)[number];
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const SYSTEM_PROMPT = `너는 도서의 관점 성향을 분석하는 전문가야.
+const SYSTEM_PROMPT_V3 = `너는 도서의 관점 성향을 분석하는 전문가야.
 주어진 책 목록의 각 책에 대해, 아래 6개 관점 축의 소속도(membership) 점수를 매겨줘.
 
 [관점 축]
@@ -53,6 +58,33 @@ ${ANALYZE_AXES.map(
 }
 results에는 입력된 모든 책을 포함하고, scores에는 6개 축을 모두 포함할 것.`;
 
+// M3 실험 v4a: v3를 복제하고 규칙 10~13(P1~P4)을 추가한 버전.
+// P1의 소설 4축 0/0은 프롬프트 지시와 별개로 응답 조립 단계에서 코드로도 강제된다.
+const V4A_EXTRA_RULES = `
+10. 소설 규약: topics에 #소설이 포함된 책은 ①indiv-struct와 ⑥narrative-explain 두 축만 채점하고, 나머지 4축(neutral-critical, now-future, cause-solution, acad-pop)은 반드시 0/0으로 반환할 것.
+11. 학술↔대중 판정 기준: A(학술·전문)는 해당 분야의 선행 연구·이론·전문 용어를 전제로 논증하는 책(학술서·전문서·연구서). B(대중·실용)는 일반 독자가 배경지식 없이 읽도록 쓰인 책(교양서·실용서·에세이). 저자의 직업이 아니라 서술 방식과 상정 독자로 판단할 것. 전문 주제라도 교양 문체면 B (예: 대중 과학서).
+12. 현재↔미래 판정 기준: 책이 현재의 사회·현상·문제를 분석 대상으로 삼으면 A(현재 진단). 미래 예측·전망·시나리오가 중심이면 B. 시간 차원 자체가 논점이 아닌 경우(과거사 서술, 무시간적 이론서 등)에만 0/0. 명시적 시간 표현이 없다는 이유로 0/0을 주지 말 것 — 현재를 다루는 책은 대부분 A다.
+13. 개인↔구조 판정 기준: 소재가 아니라 논증의 귀착점으로 판단할 것. 개인의 사례·고통·경험이 등장해도 그것이 제도·시스템·사회 구조의 문제를 논증하는 근거로 쓰이면 B(구조). 구조적 배경이 언급돼도 결론이 개인의 선택·성장·실천이면 A(개인).`;
+
+// M3 실험 v4b: v4a에 책소개(description) 입력을 추가한 버전.
+const V4B_EXTRA_RULES = `
+14. 이 버전에서는 책 입력에 "소개:"(책소개)가 포함됨. 규칙 3의 판단 근거를 '제목·topics 태그·책소개'로 확장해, 태그와 책소개를 함께 근거로 판단하되, 책소개의 홍보성 문체(출판사 소개글)에 이끌려 관점을 중립으로 뭉개지 말 것.`;
+
+const SYSTEM_PROMPTS: Record<PromptVersion, string> = {
+  v3: SYSTEM_PROMPT_V3,
+  v4a: SYSTEM_PROMPT_V3 + V4A_EXTRA_RULES,
+  v4b: SYSTEM_PROMPT_V3 + V4A_EXTRA_RULES + V4B_EXTRA_RULES,
+};
+
+// P1 코드 강제: v4a/v4b에서 #소설 책의 4축을 응답과 무관하게 0/0으로 덮어쓴다.
+// v3 경로는 건드리지 않는다 (라이브 무영향 안전장치).
+const FICTION_FORCED_ZERO_AXES: AnalyzeAxisId[] = [
+  "neutral-critical",
+  "now-future",
+  "cause-solution",
+  "acad-pop",
+];
+
 function clampScore(value: unknown): number {
   const n = typeof value === "number" ? value : Number(value);
   if (!Number.isFinite(n)) return 0;
@@ -85,10 +117,37 @@ function normalizeResults(
   });
 }
 
+function enforceFictionZero(
+  results: { id: string; scores: BookScores }[],
+  books: InputBook[],
+  promptVersion: PromptVersion
+): { id: string; scores: BookScores }[] {
+  if (promptVersion === "v3") return results;
+  const fictionIds = new Set(
+    books.filter((b) => b.topics.includes("#소설")).map((b) => b.id)
+  );
+  for (const r of results) {
+    if (!fictionIds.has(r.id)) continue;
+    for (const axis of FICTION_FORCED_ZERO_AXES) {
+      r.scores[axis] = { a: 0, b: 0 };
+    }
+  }
+  return results;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const inputBooks = Array.isArray(body?.books) ? body.books : [];
+
+    const rawVersion = body?.promptVersion ?? "v3";
+    if (!PROMPT_VERSIONS.includes(rawVersion)) {
+      return NextResponse.json(
+        { error: `알 수 없는 promptVersion: ${rawVersion}` },
+        { status: 400 }
+      );
+    }
+    const promptVersion = rawVersion as PromptVersion;
 
     const books: InputBook[] = inputBooks
       .filter((b: any) => b && b.id != null && b.title)
@@ -97,6 +156,7 @@ export async function POST(req: Request) {
         id: String(b.id),
         title: String(b.title),
         topics: String(b.topics ?? ""),
+        description: String(b.description ?? ""),
       }));
 
     if (books.length === 0) {
@@ -106,14 +166,33 @@ export async function POST(req: Request) {
       );
     }
 
+    // v4b 스모크 검증용: 소개 조회가 조용히 실패하면 v4b가 v4a 중복 측정이 되므로
+    // 소개가 실제 입력에 포함되는 권수를 로그로 남긴다.
+    if (promptVersion === "v4b") {
+      const withDesc = books.filter((b) => b.description.trim().length > 0);
+      console.log(
+        `🧪 v4b 입력: ${withDesc.length}/${books.length}권 소개 포함` +
+          (withDesc.length > 0
+            ? ` (예: [${withDesc[0].id}] ${withDesc[0].description.slice(0, 30)}…)`
+            : " ⚠️ 소개 없음 - v4a와 동일 입력이 됨")
+      );
+    }
+
+    // v3/v4a 입력 라인은 기존과 동일. v4b만 소개(500자)를 덧붙인다.
     const bookList = books
-      .map((b) => `- id: ${b.id} | 제목: ${b.title} | topics: ${b.topics}`)
+      .map((b) => {
+        const base = `- id: ${b.id} | 제목: ${b.title} | topics: ${b.topics}`;
+        if (promptVersion === "v4b" && b.description) {
+          return `${base} | 소개: ${b.description.slice(0, 500)}`;
+        }
+        return base;
+      })
       .join("\n");
 
     const res = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: SYSTEM_PROMPTS[promptVersion] },
         { role: "user", content: `[책 목록]\n${bookList}` },
       ],
       temperature: 0,
@@ -122,9 +201,13 @@ export async function POST(req: Request) {
 
     const text = res.choices[0].message.content ?? "{}";
     const parsed = JSON.parse(text);
-    const results = normalizeResults(parsed, books);
+    const results = enforceFictionZero(
+      normalizeResults(parsed, books),
+      books,
+      promptVersion
+    );
 
-    return NextResponse.json({ results });
+    return NextResponse.json({ results, promptVersion });
   } catch (error) {
     console.error("❌ analyze-score 에러:", error);
     return NextResponse.json(
